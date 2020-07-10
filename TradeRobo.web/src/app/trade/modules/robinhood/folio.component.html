@@ -1,0 +1,60 @@
+<div class="mb-24" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start">
+    <!-- REACTIVE FORM EXAMPLE -->
+
+
+    <form class="mat-card mat-elevation-z4" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
+        name="form" [formGroup]="folioForm">
+        <div class="h2 mb-24">Folio Order By Amount</div>
+        <mat-spinner diameter="30" *ngIf="this.Globals.IsBusy"></mat-spinner>
+        <div class="mb-24" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="flex-start">
+            <ng-container *ngFor="let folio of folios">
+                <mat-card [ngClass]="folio == folioValue? 'indigo': 'folio'" class="mb-24" fxFlex="0 1 calc(25% - 16px)"
+                    (click)="selectFolio(folio)">{{ folio }}</mat-card>
+            </ng-container>
+        </div>
+
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxHide>
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Folio</mat-label>
+                <mat-select formControlName="Folio" required>
+                    <mat-option *ngFor="let folio of folios" [value]="folio">{{ folio }}</mat-option>
+                </mat-select>
+                <mat-error>Watchlist is required!</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <input matInput formControlName="Amount" required />
+                <mat-error>Amount is required!</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <button class="warn mat-raised-button" mat-raised-button="" (click)="placeFolioOrder()"
+                [disabled]="this.Globals.IsBusy">
+                <span class="mat-button-wrapper"> Buy </span>
+            </button>
+        </div>
+    </form>
+
+    <div *ngIf="dataSource">
+        <mat-table #table [dataSource]="dataSource">
+            <!-- Name Column -->
+    
+            <ng-container matColumnDef="Result">
+                <mat-header-cell *matHeaderCellDef>Message</mat-header-cell>
+                <mat-cell *matCellDef="let order">
+                    <p class="text-truncate font-weight-600">{{ order.Result }}</p>
+                </mat-cell>
+            </ng-container>
+    
+            <mat-header-row *matHeaderRowDef="['Result']"></mat-header-row>
+            <mat-row *matRowDef="let order; columns: ['Result']"></mat-row>
+        </mat-table>
+    </div>
+    
+</div>
+

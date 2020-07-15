@@ -1,0 +1,18 @@
+﻿<Window x:Class="TradeRoboWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TradeRoboWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button Content="Get Quote" HorizontalAlignment="Left" Margin="117,102,0,0" VerticalAlignment="Top" Height="35" Width="134" Click="Button_Click"/>
+        <TextBox x:Name="Symbol" HorizontalAlignment="Left" Margin="117,43,0,0" Text="KBE" TextWrapping="Wrap" VerticalAlignment="Top" Width="79" Height="36"/>
+        <TextBox x:Name="Total" HorizontalAlignment="Left" Margin="542,43,0,0" Text="5" TextWrapping="Wrap" VerticalAlignment="Top" Width="79" Height="36"/>
+        <TextBox x:Name="Increment" HorizontalAlignment="Left" Margin="437,43,0,0" Text=".2" TextWrapping="Wrap" VerticalAlignment="Top" Width="79" Height="36"/>
+        <TextBox x:Name="Price" HorizontalAlignment="Left" Margin="321,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="79" Height="36"/>
+        <TextBox x:Name="Quantity" HorizontalAlignment="Left" Margin="215,43,0,0" Text="10" TextWrapping="Wrap" VerticalAlignment="Top" Width="79" Height="36"/>
+
+    </Grid>
+</Window>

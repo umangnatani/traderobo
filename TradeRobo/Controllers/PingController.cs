@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TradeRobo.Service;
 
 namespace TradeRobo.Controllers
 {
@@ -13,9 +14,11 @@ namespace TradeRobo.Controllers
     public class PingController : ControllerBase
     {
         protected IWebHostEnvironment _environment { get; set; }
-        public PingController(IWebHostEnvironment env)
+        protected MyDatabaseContext _context;
+        public PingController(IWebHostEnvironment env, MyDatabaseContext context)
         {
             _environment = env;
+            _context = context;
         }
 
         [HttpGet]
@@ -31,7 +34,7 @@ namespace TradeRobo.Controllers
             return "pong";
         }
 
-        [HttpGet("api/ping/{city}")]
+         [HttpGet("api/ping/{city}")]
         public string Get(string city)
         {
             if (!string.Equals(city?.TrimEnd(), "wpb", StringComparison.OrdinalIgnoreCase))

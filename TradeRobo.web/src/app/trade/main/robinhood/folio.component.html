@@ -1,0 +1,100 @@
+<div class="mb-24 mat-card mat-elevation-z4" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start">
+
+<div class="mb-24 mat-card mat-elevation-z4" fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="start" fxFlex="1 0 auto">
+    <!-- REACTIVE FORM EXAMPLE -->
+
+
+    <div class="h2 mb-24">Folio Order By Amount</div>
+    <mat-spinner diameter="30" *ngIf="this.Globals.IsBusy"></mat-spinner>
+    <div class="mb-24" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="flex-start">
+        <ng-container *ngFor="let pie of Pies">
+            <mat-card [ngClass]="pie.Name == pieValue? 'purple': '.fuse-white-500'" class="mb-24"
+                fxFlex="0 1 calc(25% - 16px)" fxFlex.lt-sm="0 1 calc(50% - 16px)" (click)="selectFolio(pie)">
+                {{ pie.Name }}</mat-card>
+        </ng-container>
+    </div>
+
+
+    <form class="" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" [formGroup]="folioForm">
+
+        <div>
+            <mat-form-field appearance="outline" fxFlex.lt-sm="90">
+                <mat-label>Amount</mat-label>
+                <input matInput formControlName="Amount" required />
+                <mat-error>Amount is required!</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <button class="warn mat-raised-button" mat-raised-button="" (click)="placeFolioOrder()"
+                [disabled]="this.Globals.IsBusy">
+                <span class="mat-button-wrapper"> Buy </span>
+            </button>
+        </div>
+    </form>
+
+    <div *ngIf="dataSource">
+
+        
+
+        <mat-table #table [dataSource]="dataSource">
+            <!-- Name Column -->
+
+            <ng-container matColumnDef="Result">
+                <mat-header-cell *matHeaderCellDef>Message</mat-header-cell>
+                <mat-cell *matCellDef="let order">
+                    <p class="text-truncate font-weight-600">{{ order.Result }}</p>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['Result']"></mat-header-row>
+            <mat-row *matRowDef="let order; columns: ['Result']"></mat-row>
+        </mat-table>
+    </div>
+
+</div>
+
+<div *ngIf="PieDetails" fxFlex="1 0 auto">
+    <div>
+        <button class="warn mat-raised-button" mat-raised-button="" (click)="savePie()"
+            [disabled]="Total!=100">
+            <span class="mat-button-wrapper"> Update Pie </span>
+        </button>
+        &nbsp;&nbsp;
+        <a (click)="addNew()" href="javascript:void(0)">Add New</a>
+        &nbsp;&nbsp;
+
+        Total Weight: {{Total}}
+    </div>
+
+    <p-table [value]="PieDetails">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Symbol</th>
+                <th>Weight</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pie>
+            <tr>
+                <td>
+                        <input pInputText type="text" [(ngModel)]="pie.Symbol">
+
+                </td>
+                <td>
+                        <input pInputText type="text" [(ngModel)]="pie.Weight" (change)="calcTotal(pie.Weight)">
+
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer" let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    {{col.header}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
+
+</div>

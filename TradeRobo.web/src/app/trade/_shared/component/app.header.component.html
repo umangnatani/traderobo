@@ -1,0 +1,15 @@
+ <!-- HEADER -->
+ <div class="header accent p-24 h-40" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+        <!-- <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="secondary-text s-18">home</mat-icon>
+            <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+            <span class="secondary-text">User Interface</span>
+        </div> -->
+        <div class="h1 mt-0">{{apiService.PageGlobals.Title}}</div>
+    </div>
+</div>
+<!-- / HEADER -->
+<mat-card *ngIf="apiService.PageGlobals.Message" [ngClass]="apiService.PageGlobals.isError? 'warn-900 m-12': 'green-900 m-12'">
+    {{apiService.PageGlobals.Message}}
+</mat-card>

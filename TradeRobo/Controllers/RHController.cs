@@ -8,20 +8,21 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using TradeRobo.Service;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TradeRobo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class RHController : ControllerBase
+    public class RHController : BaseController
     {
 
-        private IJwtToken _token;
 
-        public RHController(IJwtToken token)
+        public RHController(IWebHostEnvironment env, MyDatabaseContext context, IJwtToken token) : base(env, context, token)
         {
-            _token = token;
+            
         }
 
 
@@ -35,9 +36,14 @@ namespace TradeRobo.Controllers
         }
 
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private void RetrieveAccessToken()
         {
-            _token.accessToken = Request.Headers["AccessToken"];
+            var id = GetUserId();
+            DBService _service = new DBService(_context);
+            _token.accessToken = _service.GetUser(id).RHToken;
+
+            //_token.accessToken = Request.Headers["AccessToken"];
 
         }
 
@@ -48,11 +54,25 @@ namespace TradeRobo.Controllers
         {
             RetrieveAccessToken();
 
-            OrderService service = new OrderService(_token);
+            RHClient service = new RHClient(_token, _context);
 
             service.PlaceOrder(poco);
             return poco;
         }
+
+
+        [HttpPost]
+        [Route("order/pie")]
+        public List<Order> PlacePieOrder(Order poco)
+        {
+            RetrieveAccessToken();
+
+            RHClient service = new RHClient(_token, _context);
+
+            return service.PlaceOrder(poco.PieId, poco.Amount);
+
+        }
+
 
 
         [HttpPost]
@@ -61,7 +81,7 @@ namespace TradeRobo.Controllers
         {
             RetrieveAccessToken();
 
-            OrderService service = new OrderService(_token);
+            RHClient service = new RHClient(_token, _context);
 
             return service.PlaceOrder(poco.Folio, poco.Amount);
 
@@ -75,7 +95,7 @@ namespace TradeRobo.Controllers
         {
             RetrieveAccessToken();
 
-            OrderService service = new OrderService(_token);
+            RHClient service = new RHClient(_token, _context);
 
             return service.GetAccountProfile();
             //return "Hello";
@@ -91,14 +111,6 @@ namespace TradeRobo.Controllers
             return "Hello";
         }
 
-        [HttpGet]
-        [Route("folio")]
-        public List<string> GetFolios()
-        {
-            string webRootPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/Content/";
-            FolioService service = new FolioService();
-            return service.GetFolios(webRootPath);
-        }
 
         [HttpGet]
         [Route("path")]

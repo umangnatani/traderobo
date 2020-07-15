@@ -38,20 +38,20 @@ namespace TestConsole
 
             Settings.CSVPath = @"C:\My Stuff\Dev\Trading\TradeRobo\TradeRobo\bin\Release\netcoreapp3.1\publish/Content/";
 
-            try
-            {
-                var token = Login();
-                var service = new OrderService(token);
-                var result = service.PlaceOrder("growth.csv", 100.0);
+            //try
+            //{
+            //    var token = Login();
+            //    var service = new RHClient(token);
+            //    var result = service.PlaceOrder("growth.csv", 100.0);
 
 
-                Console.WriteLine(result);
-            }
+            //    Console.WriteLine(result);
+            //}
 
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
 
             Console.ReadLine();
 
@@ -88,6 +88,8 @@ namespace TestConsole
                 Console.WriteLine("Please Enter MFA:");
 
                 loginDetaiils.mfaToken = Console.ReadLine();
+
+                loginDetaiils.deviceToken = token.deviceToken;
 
                 service.Login(loginDetaiils, token);
 

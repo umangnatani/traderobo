@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -20,11 +20,13 @@ import { FakeDbService } from 'app/fake-db/fake-db.service';
 import { AppComponent } from 'app/app.component';
 import { AppStoreModule } from 'app/store/store.module';
 
+
 import { ToastrModule } from 'ngx-toastr';
 
 // Commentented out pot of box layput modules and used our layout
 // import { LayoutModule } from 'app/layout/layout.module';
-import { LayoutModule } from 'app/trade/layout/layout.module';
+import { LayoutModule } from 'app/trade/_layout/layout.module';
+import { JwtInterceptor, ErrorInterceptor, AuthGuard, Globals  } from 'app/trade/_helpers';
 
 const appRoutes: Routes = [
     {
@@ -54,7 +56,7 @@ const appRoutes: Routes = [
     },
     {
         path      : '**',
-        redirectTo: 'apps'
+        redirectTo: 'trade/robinhood'
     }
 ];
 
@@ -67,6 +69,7 @@ const appRoutes: Routes = [
         BrowserAnimationsModule,
         HttpClientModule,
         RouterModule.forRoot(appRoutes),
+        // RouterModule.forRoot(appRoutes, { useHash: true }),
 
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService, {
@@ -91,6 +94,11 @@ const appRoutes: Routes = [
         // App modules
         LayoutModule,
         AppStoreModule
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        Globals,
     ],
     bootstrap   : [
         AppComponent

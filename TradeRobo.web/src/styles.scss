@@ -4,4 +4,19 @@
 // Import app.theme.scss
 @import "app/app.theme";
 
-@import "../node_modules/ngx-toastr/toastr.css";
+
+@import "~ngx-toastr/toastr.css";
+
+@import '~primeicons/primeicons';
+@import '~primeng/resources/themes/nova-light/theme';
+
+body .ui-table .ui-table-tbody > tr > th {
+    border: 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+body .ui-table .ui-table-tbody > tr > td {
+    border: 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+

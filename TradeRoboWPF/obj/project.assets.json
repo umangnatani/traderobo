@@ -5208,8 +5208,8 @@
     },
     "TradeRobo.Service/1.0.0": {
       "type": "project",
-      "path": "../Util/TradeRobo.Service.csproj",
-      "msbuildProject": "../Util/TradeRobo.Service.csproj"
+      "path": "../TradeRobo.Service/TradeRobo.Service.csproj",
+      "msbuildProject": "../TradeRobo.Service/TradeRobo.Service.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5243,8 +5243,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj": {
-              "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj"
+            "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj": {
+              "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj"
             }
           }
         }

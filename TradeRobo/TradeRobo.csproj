@@ -23,15 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Util\TradeRobo.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <TypeScriptCompile Include="file.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TradeRobo.Service\TradeRobo.Service.csproj" />
   </ItemGroup>
 
 

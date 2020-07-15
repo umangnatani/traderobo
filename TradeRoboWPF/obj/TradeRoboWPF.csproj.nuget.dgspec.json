@@ -4,73 +4,14 @@
     "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj": {}
   },
   "projects": {
-    "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj": {
+    "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
-        "projectName": "TradeRoboWPF",
-        "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
-        "packagesPath": "C:\\Users\\umang\\.nuget\\packages\\",
-        "outputPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\umang\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "netcoreapp3.1"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "netcoreapp3.1": {
-            "projectReferences": {
-              "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj": {
-                "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "netcoreapp3.1": {
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            },
-            "Microsoft.WindowsDesktop.App.WPF": {
-              "privateAssets": "none"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj",
+        "projectUniqueName": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj",
         "projectName": "TradeRobo.Service",
-        "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\TradeRobo.Service.csproj",
+        "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj",
         "packagesPath": "C:\\Users\\umang\\.nuget\\packages\\",
-        "outputPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\Util\\obj\\",
+        "outputPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umang\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -131,6 +72,65 @@
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
+        "projectName": "TradeRoboWPF",
+        "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
+        "packagesPath": "C:\\Users\\umang\\.nuget\\packages\\",
+        "outputPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\umang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj": {
+                "projectPath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRobo.Service\\TradeRobo.Service.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"

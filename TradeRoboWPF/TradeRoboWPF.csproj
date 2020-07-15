@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Util\TradeRobo.Service.csproj" />
+    <ProjectReference Include="..\TradeRobo.Service\TradeRobo.Service.csproj" />
   </ItemGroup>
 
 </Project>

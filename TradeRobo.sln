@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRobo", "TradeRobo\TradeRobo.csproj", "{ACF36386-FA4B-4442-BBFF-47B7E155C650}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRobo.Service", "Util\TradeRobo.Service.csproj", "{A0A1EBAC-DD47-4245-99B2-BC1786692C00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRobo.Service", "TradeRobo.Service\TradeRobo.Service.csproj", "{A0A1EBAC-DD47-4245-99B2-BC1786692C00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{1A6316F6-EF94-498A-9B36-5FE6E428D3BB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeRoboWPF", "TradeRoboWPF\TradeRoboWPF.csproj", "{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRoboWPF", "TradeRoboWPF\TradeRoboWPF.csproj", "{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{A0A1EBAC-DD47-4245-99B2-BC1786692C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0A1EBAC-DD47-4245-99B2-BC1786692C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0A1EBAC-DD47-4245-99B2-BC1786692C00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A6316F6-EF94-498A-9B36-5FE6E428D3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A6316F6-EF94-498A-9B36-5FE6E428D3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A6316F6-EF94-498A-9B36-5FE6E428D3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A6316F6-EF94-498A-9B36-5FE6E428D3BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU

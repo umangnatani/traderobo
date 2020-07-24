@@ -1,15 +1,13 @@
 
-import { ApiService } from 'app/trade/_services/api.service';
+import { ApiService } from 'app/trade/_services';
 
 
 
 export abstract class BaseComponent {
-    token: ApiModel.JwtToken;
 
     Globals = {IsBusy: false};
 
     constructor(protected apiService: ApiService) {
-        this.token =  this.apiService.token;
         this.apiService.resetPageGlobals();
     }
 }

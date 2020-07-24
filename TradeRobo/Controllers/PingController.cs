@@ -34,7 +34,14 @@ namespace TradeRobo.Controllers
             return "pong";
         }
 
-         [HttpGet("api/ping/{city}")]
+        [HttpGet]
+        [Route("api/ping/db")]
+        public List<Pie> GetDBPing()
+        {
+            return _context.Pie.ToList();
+        }
+
+        [HttpGet("api/ping/{city}")]
         public string Get(string city)
         {
             if (!string.Equals(city?.TrimEnd(), "wpb", StringComparison.OrdinalIgnoreCase))

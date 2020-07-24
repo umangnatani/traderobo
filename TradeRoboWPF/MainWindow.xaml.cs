@@ -51,7 +51,7 @@ namespace TradeRoboWPF
 
             //var tdOrder = new TDOrder { Symbol = "KBE", Price = 26.25, Quantity = 10, Increment = .2, Total = 5 };
 
-            orderService.PlaceOrder(tdOrder);
+            orderService.PlaceTDOrder(tdOrder, 1);
 
             //client.PlaceOrder(tdOrder, token);
 

@@ -1,6 +1,33 @@
 // tslint:disable-next-line: no-namespace
 namespace ApiModel {
 
+    export enum Environment {
+        Prod = 'prod',
+        Staging = 'staging',
+        Test = 'test',
+        Dev = 'dev',
+        Local = 'local',
+    }
+
+    export interface Pie {
+        Id: number;
+        UserId: number;
+        Name: string;
+        Desc: string;
+    }
+
+    export interface Configuration {
+        apiUrl: string;
+        stage: Environment;
+    }
+
+    export interface ReturnType {
+        Code: number;
+        Success: boolean;
+        Message: string;
+        Object?: any;
+    }
+
     export interface FavStocks {
         Id: number;
         Symbol: string;
@@ -14,10 +41,10 @@ namespace ApiModel {
     }
 
 
-    export interface JwtToken {
-        userName: string;
-        accessToken: string;
-        isAuthenticated: boolean;
+    export interface RHAuthResponse {
+        ErrorMessage: string;
+        MFARequired: boolean;
+        isRHAuthenticated: boolean;
     }
 
     export interface Order {

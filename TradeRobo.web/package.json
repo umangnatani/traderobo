@@ -41,6 +41,8 @@
     "@swimlane/ngx-datatable": "17.0.0",
     "@swimlane/ngx-dnd": "8.1.2",
     "@types/prismjs": "1.16.0",
+    "ag-grid-angular": "23.2.1",
+    "ag-grid-community": "23.2.1",
     "angular-calendar": "0.27.13",
     "angular-in-memory-web-api": "0.8.0",
     "chart.js": "2.8.0",

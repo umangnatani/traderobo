@@ -5,11 +5,18 @@ using System.Text;
 namespace TradeRobo.Service
 {
 
+    public class PieOrder
+    {
+        public int PieId { get; set; }
+        public string Side { get; set; }
+
+        public double Amount { get; set; }
+        public bool PriceWeighted { get; set; }
+    }
 
 
 
-
-    public class Order
+        public class Order
     {
         public string Folio { get; set; }
         public int PieId { get; set; }
@@ -44,14 +51,35 @@ namespace TradeRobo.Service
     }
 
 
+    public class ReturnType
+    {
+        public int Code { get; set; }
+        public bool Success { get; set; } = true;
+        public string Message { get; set; }
+
+        public Object Object { get; set; }
+
+        public ReturnType()
+        {
+            Code = 1;
+            Message = "Operation Successful.";
+        }
+    }
+
+    public class RHAuthResponse
+    {
+        public bool MFARequired { get; set; }
+        public bool isRHAuthenticated { get; set; }
+
+        public string ErrorMessage { get; set; }
+    }
+
     public class Credentials
     {
         public string userName { get; set; }
         public string passWord { get; set; }
 
         public string mfaToken { get; set; }
-
-        public string deviceToken { get; set; }
     }
 
     public interface IJwtToken
@@ -59,22 +87,16 @@ namespace TradeRobo.Service
         int UserId { get; set; }
         string accessToken { get; set; }
         string deviceToken { get; set; }
-        bool isAuthenticated { get; set; }
-        string userName { get; set; }
     }
 
-    public class JwtToken : IJwtToken
+    public class RHToken : IJwtToken
     {
 
         public int UserId { get; set; }
 
         public string accessToken { get; set; }
 
-        public string userName { get; set; }
-
         public string deviceToken { get; set; }
-
-        public bool isAuthenticated { get; set; }
 
 
     }
@@ -97,6 +119,25 @@ namespace TradeRobo.Service
 
     }
 
+    public class GlobalQuote
+    {
+        public string symbol { get; set; }
+        public double bidPrice { get; set; }
+        public double askPrice { get; set; }
+        public double lastPrice { get; set; }
+        public double openPrice { get; set; }
+        public double highPrice { get; set; }
+        public double lowPrice { get; set; }
+
+        public double closePrice { get; set; }
+
+        public double netChange { get; set; }
+        public double netPercentChangeInDouble { get; set; }
+        public double regularMarketLastPrice { get; set; }
+
+
+    }
+
     public class Quote
     {
         public string Symbol { get; set; }
@@ -107,15 +148,24 @@ namespace TradeRobo.Service
 
         public double last_trade_price { get; set; }
 
+        public double previous_close { get; set; }
+
         public double price { get; set; }
 
         public double quantity { get; set; }
 
-
-
         public string instrument { get; set; }
         public int ask_size { get; set; }
         public int bid_size { get; set; }
+
+        public double pct_change
+        {
+            get
+            {
+                return Math.Round((last_trade_price - previous_close)*100/ previous_close, 4);
+            }
+        }
+
 
 
     }

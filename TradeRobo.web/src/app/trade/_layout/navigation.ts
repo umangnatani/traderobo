@@ -20,8 +20,8 @@ export const navigation: FuseNavigation[] = [
         ]
     },
     {
-        id      : 'Admin',
-        title   : 'Admin',
+        id      : 'Account',
+        title   : 'Account',
         type    : 'group',
         icon    : 'pages',
         children: [
@@ -30,9 +30,18 @@ export const navigation: FuseNavigation[] = [
                 title    : 'ManagePie',
                 translate: 'Manage Pie',
                 type     : 'item',
-                icon     : 'attach_money',
-                url      : '/tarde/robinhood'
+                icon     : 'pie_chart',
+                url      : '/trade/pie'
             },
+            {
+                id       : 'Preferences',
+                title    : 'Preferences',
+                translate: 'Preferences',
+                type     : 'item',
+                icon     : 'room_preferences',
+                url      : '/trade/pref'
+            },
+            
            
         ]
     },
@@ -50,6 +59,32 @@ export const navigation: FuseNavigation[] = [
                 icon     : 'attach_money',
                 url      : '/trade/td'
             },
+           
+        ]
+    },
+    {
+        id      : 'Admin',
+        title   : 'Admin',
+        type    : 'group',
+        icon    : 'pages',
+        children: [
+            {
+                id       : 'Manage Settings',
+                title    : 'ManageSettings',
+                translate: 'Manage Settings',
+                type     : 'item',
+                icon     : 'settings',
+                url      : '/trade/settings'
+            },
+            {
+                id       : 'Manage User',
+                title    : 'ManageUser',
+                translate: 'Manage User',
+                type     : 'item',
+                icon     : 'account_circle',
+                url      : '/trade/user'
+            },
+            
            
         ]
     },

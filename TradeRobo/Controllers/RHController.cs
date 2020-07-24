@@ -19,105 +19,70 @@ namespace TradeRobo.Controllers
     public class RHController : BaseController
     {
 
+        TradeService _service;
 
-        public RHController(IWebHostEnvironment env, MyDatabaseContext context, IJwtToken token) : base(env, context, token)
+        public RHController(IWebHostEnvironment env, MyDatabaseContext context) : base(env, context)
         {
-            
         }
 
 
         [HttpPost]
         [Route("login")]
-        public JwtToken Login([FromBody] Credentials loginDetails)
+        public RHAuthResponse Login([FromBody] Credentials loginDetails)
         {
-            LoginService service = new LoginService();
-            service.Login(loginDetails, _token);
-            return (JwtToken)_token;
+            InitTradeService();
+            return _service.RHLogin(loginDetails);
         }
 
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private void RetrieveAccessToken()
+        private void InitTradeService()
         {
-            var id = GetUserId();
-            DBService _service = new DBService(_context);
-            _token.accessToken = _service.GetUser(id).RHToken;
+            var UserId = GetUserId();
 
-            //_token.accessToken = Request.Headers["AccessToken"];
+            _service = new TradeService(_context, UserId);
 
         }
 
 
         [HttpPost]
         [Route("order")]
-        public Order PlaceOrder(Order poco)
+        public ReturnType PlaceOrder(Order poco)
         {
-            RetrieveAccessToken();
+            InitTradeService();
 
-            RHClient service = new RHClient(_token, _context);
-
-            service.PlaceOrder(poco);
-            return poco;
+            return _service.PlaceOrder(poco);
         }
 
 
         [HttpPost]
         [Route("order/pie")]
-        public List<Order> PlacePieOrder(Order poco)
+        public ReturnType PlacePieOrder(PieOrder poco)
         {
-            RetrieveAccessToken();
+            InitTradeService();
 
-            RHClient service = new RHClient(_token, _context);
-
-            return service.PlaceOrder(poco.PieId, poco.Amount);
+            return _service.PlaceOrder(poco);
 
         }
 
 
-
-        [HttpPost]
-        [Route("order/folio")]
-        public List<Order> PlaceFolioOrder(Order poco)
-        {
-            RetrieveAccessToken();
-
-            RHClient service = new RHClient(_token, _context);
-
-            return service.PlaceOrder(poco.Folio, poco.Amount);
-
-        }
-
-
+              
 
         [HttpGet]
         [Route("account")]
         public string Get()
         {
-            RetrieveAccessToken();
+            InitTradeService();
 
-            RHClient service = new RHClient(_token, _context);
-
-            return service.GetAccountProfile();
+            return _service.GetAccountProfile();
             //return "Hello";
 
         }
 
 
 
-        [HttpGet]
-        [Route("test")]
-        public string Test()
-        {
-            return "Hello";
-        }
+     
 
 
-        [HttpGet]
-        [Route("path")]
-        public string GetPath()
-        {
-
-            return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/Content/";
-        }
     }
 }

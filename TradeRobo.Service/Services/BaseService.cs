@@ -30,5 +30,11 @@ namespace TradeRobo.Service
             return _context.AppSettings.Where(x => x.Key == key).Select(x => x.Value).SingleOrDefault();
         }
 
+        public User GetUser(int Id)
+        {
+            return _context.User.Find(Id);
+        }
+
+
     }
 }

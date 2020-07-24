@@ -13,6 +13,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {TableModule} from 'primeng/table';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
@@ -24,6 +25,9 @@ import { TDOrderComponent } from './main';
 import { FolioComponent } from './main';
 import { AuthGuard  } from 'app/trade/_helpers';
 import { AppHeaderComponent } from './_shared/component';
+import { UserComponent } from './main';
+import { PieComponent } from './main';
+import { PieDetailComponent } from './main/pie/pie-detail.component';
 
 const routes: Routes = [
     {
@@ -34,6 +38,17 @@ const routes: Routes = [
     {
         path     : 'td',
         component: TDOrderComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path     : 'user',
+        component: UserComponent,
+        canActivate: [AuthGuard]
+    },
+
+    {
+        path     : 'pie',
+        component: PieComponent,
         canActivate: [AuthGuard]
     },
 
@@ -51,7 +66,10 @@ const routes: Routes = [
         FolioComponent,
         TDOrderComponent,
         AuthComponent,
-        AppHeaderComponent
+        AppHeaderComponent,
+        UserComponent,
+        PieComponent,
+        PieDetailComponent
     ],
     imports     : [
         RouterModule.forChild(routes),
@@ -69,7 +87,8 @@ const routes: Routes = [
         FuseSharedModule,
         MatCheckboxModule,
         NgxDatatableModule,
-        TableModule
+        TableModule,
+        AgGridModule.withComponents([])
     ],
     exports: [OrderComponent]
 })

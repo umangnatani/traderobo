@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService, ApiService } from 'app/trade/_services';
+import { NotificationService, ApiService, AuthenticationService } from 'app/trade/_services';
 
 @Component({
     selector     : 'quick-panel',
@@ -18,7 +18,8 @@ export class QuickPanelComponent implements OnInit, OnDestroy
 
     constructor(
         private notificationService: NotificationService,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private service: AuthenticationService
     )
     {
         // Set the defaults
@@ -34,10 +35,17 @@ export class QuickPanelComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this.apiService.getFavStocks().subscribe((data) => {
-            this.tickers = data;
-        });
-        // Subscribe to the events
+
+        const currentUser = this.service.currentUserValue;
+        if (currentUser) {
+            this.apiService.getFavStocks().subscribe((data) => {
+                this.tickers = data;
+            });
+            // Subscribe to the events
+        }
+
+
+      
       
     }
 

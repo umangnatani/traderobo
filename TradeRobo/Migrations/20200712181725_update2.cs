@@ -42,7 +42,7 @@ namespace TradeRobo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PieId = table.Column<int>(nullable: false),
                     Symbol = table.Column<string>(nullable: true),
-                    Weight = table.Column<double>(nullable: false),
+                    Weight = table.Column<decimal>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

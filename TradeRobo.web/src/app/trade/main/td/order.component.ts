@@ -12,9 +12,6 @@ import { Globals } from 'app/trade/_helpers';
 })
 export class TDOrderComponent extends BaseComponent implements OnInit {
 
-    orderForm: FormGroup;
-    orderSide = 'buy';
-    showAdvanced = false;
 
 
     constructor(
@@ -32,34 +29,7 @@ export class TDOrderComponent extends BaseComponent implements OnInit {
         this.apiService.setTile('Place a TD Trade');
         // this.globals.PageTitle = 'Place a TD Trade';
 
-        this.orderForm = this._formBuilder.group({
-            Symbol: ['', Validators.required],
-            Quantity: [10, Validators.required],
-            Price: [null],
-            Side: ['buy'],
-            Increment: [.20],
-            Total: [5],
-        });
-
-        this.notificationService.currentSymbol.subscribe(val => this.orderForm.controls.Symbol.setValue(val));
+     
     }
 
-    checkAdvanced(){
-        this.showAdvanced = !this.showAdvanced;
-    }
-
-    selectOrderSide(val: string): void {
-        this.orderForm.controls.Side.setValue(val);
-        this.orderSide = val;
-    }
-
-    order(): void {
-        this.Globals.IsBusy = true;
-        this.apiService.placeTDOrder(this.orderForm.value).subscribe((data) => {
-            console.log(data);
-            this.apiService.setMessage('Orders placed successfully');
-            this.Globals.IsBusy = false;
-        });
-    }
-
-}
+   }

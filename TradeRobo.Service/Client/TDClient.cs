@@ -24,29 +24,44 @@ namespace TradeRobo.Service
         }
 
 
-        public void GetQuote(string symbol, TDToken token)
+        public Dictionary<string, GlobalQuote> GetQuote(string symbol)
         {
-            client.SetHeaders(_token.access_token);
+            var list = new Dictionary<string, GlobalQuote>();
 
-            var payload = new Dictionary<string, string>();
+            try
+            {
+                client.SetHeaders(_token.access_token);
 
-            payload.Add("apikey", Settings.TDClientId);
-            payload.Add("symbol", symbol);
+                var payload = new Dictionary<string, string>();
 
-            var response = client.Get(TDEndPoint.Quotes, payload);
+                payload.Add("apikey", Settings.TDClientId);
+                payload.Add("symbol", symbol);
+
+                var json = client.Get(TDEndPoint.Quotes, payload);
+
+                list = JsonConvert.DeserializeObject<Dictionary<string, GlobalQuote>> (json);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Authenticate();
+                list = GetQuote(symbol);
+            }
+
+            return list;
         }
 
 
         public void GetAccount()
         {
-            
+
 
             //var payload = new Dictionary<string, string>();
 
             //payload.Add("apikey", Settings.TDClientId);
             //payload.Add("symbol", symbol);
 
-            try {
+            try
+            {
 
                 client.SetHeaders(_token.access_token);
 
@@ -56,7 +71,7 @@ namespace TradeRobo.Service
 
                 _token.userName = json.GetValue("accountId").ToString();
             }
-            catch(UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException e)
             {
                 Authenticate();
                 GetAccount();
@@ -96,7 +111,7 @@ namespace TradeRobo.Service
 
             orderLeg.Add("instruction", order.Side);
 
-            orderLeg.Add("quantity", 10);
+            orderLeg.Add("quantity", order.Quantity);
 
             var instrument = new Dictionary<string, object>();
 
@@ -132,10 +147,10 @@ namespace TradeRobo.Service
 
         public void Authenticate()
         {
-       
+
             var payload = new List<KeyValuePair<string, string>>();
             //payload.Add("client_id", Settings.ClientId + "@AMER.OAUTHAP");
-            payload.Add(new KeyValuePair<string, string> ("client_id", Settings.TDClientId ));
+            payload.Add(new KeyValuePair<string, string>("client_id", Settings.TDClientId));
             payload.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
             payload.Add(new KeyValuePair<string, string>("refresh_token", _token.refresh_token));
             payload.Add(new KeyValuePair<string, string>("access_type", ""));

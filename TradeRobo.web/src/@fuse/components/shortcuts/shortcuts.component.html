@@ -17,7 +17,7 @@
                      *ngFor="let shortcutItem of shortcutItems">
 
                     <a mat-icon-button matTooltip="{{shortcutItem.title}}" [routerLink]="shortcutItem.url">
-                        <mat-icon class="secondary-text" *ngIf="shortcutItem.icon">{{shortcutItem.icon}}</mat-icon>
+                        <mat-icon *ngIf="shortcutItem.icon">{{shortcutItem.icon}}</mat-icon>
                         <span *ngIf="!shortcutItem.icon" class="h2 secondary-text text-bold">
                             {{shortcutItem.title.substr(0, 1).toUpperCase()}}
                         </span>

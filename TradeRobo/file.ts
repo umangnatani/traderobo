@@ -1,4 +1,6 @@
-﻿export interface FavStocks {
+﻿export interface Pie {
     Id: number;
-    Symbol: string;
+    UserId: number;
+    Name: string;
+    Desc: string;
 }

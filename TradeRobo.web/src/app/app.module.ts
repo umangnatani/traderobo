@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,6 +27,7 @@ import { ToastrModule } from 'ngx-toastr';
 // import { LayoutModule } from 'app/layout/layout.module';
 import { LayoutModule } from 'app/trade/_layout/layout.module';
 import { JwtInterceptor, ErrorInterceptor, AuthGuard, Globals  } from 'app/trade/_helpers';
+import { EnvConfigService } from './trade/_services';
 
 const appRoutes: Routes = [
     {
@@ -98,6 +99,12 @@ const appRoutes: Routes = [
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: (envConfigService: EnvConfigService) => () => envConfigService.load(),
+        //     deps: [EnvConfigService],
+        //     multi: true
+        //   },
         Globals,
     ],
     bootstrap   : [

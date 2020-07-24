@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace TradeRobo
 {
@@ -43,6 +44,7 @@ namespace TradeRobo
                 .AddNewtonsoftJson(options =>
                 {
                     options.UseMemberCasing();
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
             services.AddSwaggerGen(c =>
@@ -76,7 +78,7 @@ namespace TradeRobo
             services.AddDbContext<MyDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection"), b => b.MigrationsAssembly("TradeRobo")));
 
-            services.AddScoped<IJwtToken, JwtToken>();
+            //services.AddScoped<IJwtToken, RHToken>();
 
             //services.Configure<IISServerOptions>(options =>
             //{

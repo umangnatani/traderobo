@@ -22,7 +22,7 @@ export class RobinhoodComponent extends BaseComponent implements OnInit, OnDestr
 
     constructor(
         private _formBuilder: FormBuilder,
-        protected apiService: ApiService,
+        public apiService: ApiService,
         private notificationService: NotificationService,
         private globals: Globals
     ) {

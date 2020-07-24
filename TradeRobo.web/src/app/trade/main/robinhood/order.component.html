@@ -2,7 +2,7 @@
     <div class="h2 mb-24" fxFlex>Order form</div>
     <div>
 
-        <form [formGroup]="orderForm" fxLayout="column">
+        <form [formGroup]="form" fxLayout="column">
 
             <div fxLayoutGap="8px" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start">
                 <div fxFlex.lt-sm="100">
@@ -26,16 +26,37 @@
                         <input matInput formControlName="Price" />
                     </mat-form-field>
                 </div>
-               
+
+                <div fxFlex.lt-sm="100" fxFlex.lt-sm="90">
+                    <mat-checkbox (click)="checkAdvanced()">Advanced</mat-checkbox>
+                </div>
+
+            </div>
+            <div fxLayoutGap="8px" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start">
+                
+                <div fxFlex.lt-sm="100" *ngIf="showAdvanced">
+                    <mat-form-field appearance="outline" fxFlex.lt-sm="90">
+                        <mat-label>Increment</mat-label>
+                        <input matInput formControlName="Increment" />
+                    </mat-form-field>
+                </div>
+
+                <div fxFlex.lt-sm="100" *ngIf="showAdvanced">
+                    <mat-form-field appearance="outline" fxFlex.lt-sm="90">
+                        <mat-label>Total</mat-label>
+                        <input matInput formControlName="Total" />
+                    </mat-form-field>
+                </div>
             </div>
             <div class="mb-24" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="flex-start">
-                <mat-card [ngClass]="orderSide == 'buy'? 'green-800': 'folio'" class="mb-24"
-                    fxFlex="20" fxFlex.lt-sm="40" (click)="selectOrderSide('buy')">Buy</mat-card>
-                <mat-card [ngClass]="orderSide == 'sell'? 'pink': 'folio'" class="mb-24"
-                    fxFlex="20" fxFlex.lt-sm="40" (click)="selectOrderSide('sell')">Sell</mat-card>
+                <mat-card [ngClass]="orderSide == 'buy'? 'green-800': 'folio'" class="mb-24" fxFlex="20"
+                    fxFlex.lt-sm="40" (click)="selectOrderSide('buy')">Buy</mat-card>
+                <mat-card [ngClass]="orderSide == 'sell'? 'pink': 'folio'" class="mb-24" fxFlex="20"
+                    fxFlex.lt-sm="40" (click)="selectOrderSide('sell')">Sell</mat-card>
             </div>
             <div>
-                <button class="warn mat-raised-button" type="submit" (click)="order()" [disabled]="this.Globals.IsBusy">
+                <button class="warn mat-raised-button" type="submit" (click)="order()"
+                    [disabled]="this.Globals.IsBusy">
                     Place Order
                 </button>
             </div>

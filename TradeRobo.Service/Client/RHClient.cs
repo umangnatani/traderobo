@@ -8,6 +8,7 @@ using System.IO;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Linq.Expressions;
 
 namespace TradeRobo.Service
 {
@@ -17,42 +18,20 @@ namespace TradeRobo.Service
         public List<Quote> results { get; set; }
     }
 
-    public class RHClient: BaseService
+    public class RHClient
     {
         RestClient client;
+        RHToken _token;
 
-        public RHClient(IJwtToken token, MyDatabaseContext context): base(context)
+        public RHClient(RHToken token)
         {
             client = new RestClient();
-            client.SetHeaders(token.accessToken);
+            _token = token;
+
+            if((!string.IsNullOrWhiteSpace(token.accessToken) ))
+                client.SetHeaders(token.accessToken);
         }
 
-
-        public List<Order> PlaceOrder(int PieId, double amount)
-        {
-            DBService service = new DBService(_context);
-
-            var StockList = service.GetPieDetails(PieId);
-
-            var retValue = new List<Order>();
-
-            var AccountUrl = GetAccountProfile();
-
-
-            foreach (var stock in StockList)
-            {
-                var order = new Order { Symbol = stock.Symbol , Amount = stock.Weight * amount / 100 };
-
-                //ticker.Amount = ticker.Weight * amount / 100;
-
-
-                PlaceOrder(order, AccountUrl);
-
-                retValue.Add(order);
-            }
-
-            return retValue;
-        }
 
 
         public List<Order> PlaceOrder(String pie, double amount)
@@ -110,7 +89,7 @@ namespace TradeRobo.Service
         }
 
 
-        public Quote get_quotes(string inputSymbols)
+        public List<Quote> GetQuote(string inputSymbols)
         {
             var url = RHEndPoint.Quotes + "?symbols=" + inputSymbols;
 
@@ -118,7 +97,14 @@ namespace TradeRobo.Service
 
             var json = JsonConvert.DeserializeObject<QuoteResult>(returnValue).results;
 
-            return json[0];
+            return json;
+
+        }
+
+
+        public Quote GetSingleQuote(string inputSymbols)
+        {
+            return GetQuote(inputSymbols)[0];
 
         }
 
@@ -129,7 +115,7 @@ namespace TradeRobo.Service
             if (string.IsNullOrWhiteSpace(AccountUrl))
                 AccountUrl = GetAccountProfile();
 
-            order.Quote = get_quotes(order.Symbol);
+            order.Quote = GetSingleQuote(order.Symbol);
 
             Dictionary<string, object> payload = new Dictionary<string, object>();
 
@@ -148,7 +134,7 @@ namespace TradeRobo.Service
                 order.Type = "market";
 
                 if (order.Price * order.Quantity > order.Amount)
-                    order.Amount = Math.Round(order.Price * order.Quantity + .2, 2);
+                    order.Amount = Math.Round(order.Amount + .2, 1);
 
                 Dictionary<string, object> child = new Dictionary<string, object>();
 
@@ -210,6 +196,86 @@ namespace TradeRobo.Service
 
 
         }
+
+
+        public RHAuthResponse Authenticate(Credentials loginDetails)
+        {
+
+            var authResponse = new RHAuthResponse();
+
+            String DeviceToken = "";
+
+            Dictionary<string, object> payload = new Dictionary<string, object>();
+            payload.Add("client_id", Settings.ClientId);
+            payload.Add("grant_type", "password");
+            payload.Add("expires_in", 86400);
+            payload.Add("scope", "internal");
+            payload.Add("username", loginDetails.userName);
+            payload.Add("password", loginDetails.passWord);
+
+            if (!string.IsNullOrWhiteSpace(_token.deviceToken))
+                DeviceToken = Helper.Decrypt(_token.deviceToken);
+
+            if (string.IsNullOrWhiteSpace(DeviceToken))
+            {
+                DeviceToken = Helper.GenerateDeviceToken();
+            }
+
+            if (!string.IsNullOrWhiteSpace(loginDetails.mfaToken))
+            {
+                payload.Add("mfa_code", loginDetails.mfaToken);
+            }
+
+
+            payload.Add("device_token", DeviceToken);
+
+            var url = "https://api.robinhood.com/oauth2/token/";
+
+            client.ClearHeaders();
+
+            string response;
+
+
+            try {
+
+                response = client.Post(url, payload);
+            }
+
+            catch(Exception e)
+            {
+                response = e.Message;
+            }
+
+            var result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response);
+
+            if (result.TryGetValue("access_token", out object value))
+            {
+                authResponse.isRHAuthenticated = true;
+                _token.accessToken = Helper.Encrypt(value.ToString());
+            }
+            else if (result.TryGetValue("detail", out object detail))
+            {
+                authResponse.ErrorMessage = Convert.ToString(detail);
+                if(authResponse.ErrorMessage == "Please enter a valid code.")
+                {
+                    authResponse.ErrorMessage = authResponse.ErrorMessage + " Or if the code is correct, please remove the device from your Devices in your Robinhood account from the Robinhood App. And then try logging in again.";
+                }
+            }
+            else if (result.TryGetValue("mfa_required", out object mfa))
+            {
+                authResponse.MFARequired = true;
+                _token.deviceToken = Helper.Encrypt(DeviceToken);
+            }
+            else
+            {
+                authResponse.ErrorMessage = $"Unknown Error ocurred. {response}";
+            }
+
+
+            return authResponse;
+
+
+            }
 
 
 

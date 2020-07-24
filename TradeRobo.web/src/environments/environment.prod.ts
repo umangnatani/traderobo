@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
     hmr       : false,
-    apiUrl: 'https://localhost:5001/api'
+    apiUrl: 'https://traderobo20200702134616.azurewebsites.net/api'
 };

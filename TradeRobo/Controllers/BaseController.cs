@@ -17,14 +17,11 @@ namespace TradeRobo.Controllers
     {
         protected IWebHostEnvironment _environment { get; set; }
         protected MyDatabaseContext _context;
-        protected IJwtToken _token;
 
-        public BaseController(IWebHostEnvironment env, MyDatabaseContext context, IJwtToken token)
+        public BaseController(IWebHostEnvironment env, MyDatabaseContext context)
         {
-            _token = token;
             _context = context;
             _environment = env;
-
         }
 
 

@@ -87,7 +87,7 @@ namespace TradeRobo.Migrations
                     b.Property<string>("Symbol")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Weight")
+                    b.Property<decimal>("Weight")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

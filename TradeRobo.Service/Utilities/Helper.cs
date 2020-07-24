@@ -17,6 +17,8 @@ namespace TradeRobo.Service
         public static string Proxy { get; set; }
         public static bool UseProxy { get; set; }
 
+        public const string AVKey = "ZIRV238H7WHUQ7YH";
+
         static Settings()
         {
             ClientId = "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS";

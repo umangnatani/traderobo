@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
+import { Observable } from 'rxjs';
+import { EnvConfigService } from '.';
 
 @Injectable({
     providedIn: 'root'
@@ -11,81 +10,80 @@ import { environment } from 'environments/environment';
 export class BaseService {
 
 
-    token: ApiModel.JwtToken;
+    isRHAuthenticated: boolean;
 
-    httpOptions;
     protected baseURL = environment.apiUrl;
+    // protected baseURL: string;
 
-    PageGlobals = {Title: '', Message: '', isError: false, isLoading: false};
+    PageGlobals = { Title: '', Message: '', isError: false, isLoading: false };
+
 
 
     constructor(
-        public httpClient: HttpClient,
-        public toastrService: ToastrService
+        public toastrService: ToastrService, public configService: EnvConfigService
     ) {
-        this.token = JSON.parse(localStorage.getItem('token'));
+        this.isRHAuthenticated = JSON.parse(localStorage.getItem('isRHAuthenticated'));
     }
 
 
-    public setTile(val: string){
+    public setRHLoggedIn(): void {
+
+        this.isRHAuthenticated = true;
+    }
+
+    public getUrl(url: string) {
+        return this.baseURL + url;
+    }
+
+
+
+    public setTile(val: string) {
         this.PageGlobals.Title = val;
     }
 
-    public setError(msg){
+    public setError(msg) {
         this.PageGlobals.isError = true;
         this.PageGlobals.isLoading = false;
         this.PageGlobals.Message = msg;
     }
 
-    public setMessage(msg){
+    public setMessage(msg) {
         this.PageGlobals.isError = false;
         this.PageGlobals.isLoading = false;
         this.PageGlobals.Message = msg;
     }
 
+    // public setMessage2(returnType: ApiModel.ReturnType) {
+    //     this.PageGlobals.isError = !returnType.Success;
+    //     this.PageGlobals.isLoading = false;
+    //     this.PageGlobals.Message = returnType.Message;
+    // }
+
+    public setMessage2(returnType: ApiModel.ReturnType) {
+        if (returnType.Success) {
+            this.toastrService.success(returnType.Message);
+        }
+        else {
+            this.toastrService.error(returnType.Message);
+        }
+        this.PageGlobals.isLoading = false;
+        // this.PageGlobals.Message = returnType.Message;
+    }
 
 
-    public resetPageGlobals(){
+
+    public resetPageGlobals() {
         this.PageGlobals.isError = false;
         this.PageGlobals.isLoading = false;
         this.PageGlobals.Message = '';
     }
 
 
-    public setHeaders() {
-
-
-        const accessToken = this.token?.accessToken;
-
-        // console.log(accessToken);
-
-        this.httpOptions = {
-            headers: new HttpHeaders({
-                AccessToken: accessToken
-            })
-        };
-        // }
-
-    }
-
     public showSuccess(msg: string) {
         this.toastrService.success(msg);
     }
-    
 
-    public get(url: string) {
-        this.setHeaders();
-        const uri = this.baseURL + url;
-        return this.httpClient.get(uri, this.httpOptions);
-    }
 
-    public post(url: string, data, setHeader = true) {
-        if (setHeader) {
-            this.setHeaders();
-        }
-        const uri = this.baseURL + url;
-        return this.httpClient.post(uri, data, this.httpOptions);
-    }
 
 
 

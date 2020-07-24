@@ -14,23 +14,35 @@ namespace TradeRobo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PieController : BaseController
     {
 
 
         private DBService _service;
-        public PieController(IWebHostEnvironment env, MyDatabaseContext context, IJwtToken token): base(env, context, token)
+        public PieController(IWebHostEnvironment env, MyDatabaseContext context): base(env, context)
         {
 
             _service = new DBService(_context);
         }
 
 
-        [Authorize]
+        
         [HttpGet]
         public List<Pie> GetPies()
         {
-            return _service.GetPies();
+            var UserId = GetUserId();
+            return _service.GetPies(UserId);
+        }
+
+
+        [HttpPost]
+        public ReturnType Save(Pie poco)
+        {
+            if (poco.Id == 0)
+                poco.UserId = GetUserId();
+
+            return _service.SavePie(poco);
         }
 
 
@@ -49,6 +61,17 @@ namespace TradeRobo.Controllers
         {
 
             return _service.GetPieDetails(PieId);
+        }
+
+        [HttpGet]
+        [Route("detail/{PieId}/{flag}")]
+        public List<PieDetail> GetPieDetails(Int32 PieId, string flag)
+        {
+            var UserId = GetUserId();
+
+            var tradeService = new TradeService(_context, UserId, true);
+
+            return tradeService.GetPieDetailsWithQuote(PieId, true);
         }
 
 

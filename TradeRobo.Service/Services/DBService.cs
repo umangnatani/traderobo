@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace TradeRobo.Service
 {
@@ -35,18 +36,38 @@ namespace TradeRobo.Service
         }
 
 
-
-        public User GetUser(int Id)
+        public ReturnType SavePie(Pie poco)
         {
+            var entity = _context.PieDetail.SingleOrDefault(x => x.Id == poco.Id);
+            if (entity != null)
+                _context.Update(poco);
+            else
+                _context.Pie.Add(poco);
 
-            return _context.User.Find(Id);
+            _context.SaveChanges();
 
+            return new ReturnType();
         }
+
+
+
+
 
         public List<User> GetAllUsers()
         {
 
             return _context.User.ToList();
+
+        }
+
+
+        public List<Menu> GetMenu(int UserId)
+        {
+            // var roleIds = _context.UserRole.Where(x => x.UserId == UserId).Select(x=> x.RoleId).ToList();
+
+            // var tmp = _context.RoleMenu.Include(x=> x.Menu).Where(x => roleIds.Contains(x.RoleId));
+
+            return _context.Menu.Include(x=> x.Children).Where(x => x.Roles.Any(x=> x.Role.Users.Any(x=> x.UserId == UserId))).ToList();
 
         }
 
@@ -57,11 +78,30 @@ namespace TradeRobo.Service
 
         }
 
-        public void SaveUser(User user)
+        public ReturnType SaveUser(User user, int CurUserId)
         {
-            user.Password = Helper.Encrypt(user.Password);
-            _context.Set<User>().Add(user);
-            _context.SaveChanges();
+            var curUser = GetUser(CurUserId);
+            if (CurUserId == 1)
+            {
+                user.Password = Helper.Encrypt(user.Password);
+                _context.Set<User>().Add(user);
+
+                //var pies = _context.Pie.Include(x => x.PieDetails).Where(x => x.Id < 5).ToList();
+
+                //pies.ForEach(pie => user.Pies.Add(new Pie { }) );
+
+                //user.Pies = pies;
+
+                _context.SaveChanges();
+
+                return new ReturnType();
+            }
+            else
+                return new ReturnType { Message = "You do not have permission", Success = false };
+
+           
+
+           
         }
 
 
@@ -116,12 +156,16 @@ namespace TradeRobo.Service
 
         public List<PieDetail> GetPieDetails(Int32 PieId)
         {
-            return _context.PieDetail.Where(x => x.PieId == PieId).OrderByDescending(x => x.Weight).ThenBy(x => x.Symbol).ToList();
+            var _service = new TradeService(_context);
+
+            var list = _context.PieDetail.Where(x => x.PieId == PieId).OrderByDescending(x => x.Weight).ThenBy(x => x.Symbol).ToList();
+
+            return list;
         }
 
-        public List<Pie> GetPies()
+        public List<Pie> GetPies(int UserId)
         {
-            return _context.Pie.ToList();
+            return _context.Pie.Where(x=> x.UserId == UserId).ToList();
         }
     }
 }

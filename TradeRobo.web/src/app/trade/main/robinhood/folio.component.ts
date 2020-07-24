@@ -10,22 +10,48 @@ import { ApiService } from 'app/trade/_services/api.service';
 })
 export class FolioComponent extends BaseComponent implements OnInit {
 
-    pieValue = 'fav';
+    pieValue = '';
     folioForm: FormGroup;
 
     dataSource;
+    orderSide = 'buy';
 
     PieDetails: ApiModel.PieDetail[];
 
     Total = 0;
 
     Pies;
-    // columns = [
-    //     { prop: 'Symbol', summaryFunc: () => null },
-    //     { prop: 'Weight', summaryFunc: cells => this.summaryWeight(cells) }
-    //   ];
 
-    // columns = [{ prop: 'Symbol' }, { prop: 'Weight' }];
+    defaultColDef;
+
+    rowClassRules;
+
+    // columnDefs = [
+    //     {field: 'Symbol' },
+    //     {field: 'Weight' }
+    // ];
+
+    private gridApi;
+
+
+    columnDefs = [
+        { field: "Symbol" },
+
+        {
+            field: "Weight"
+        },
+        {
+            field: "Quote.last_trade_price",
+            headerName: "Last Price"
+        },
+        {
+            field: "Quote.pct_change",
+            headerName: "% Change",
+            valueFormatter: (params) => {
+                return params.value + '%';
+            },
+        },
+    ];
 
 
     constructor(
@@ -34,6 +60,16 @@ export class FolioComponent extends BaseComponent implements OnInit {
     ) {
         super(apiService);
 
+        this.defaultColDef = {
+            // width: 100,
+            sortable: true,
+        };
+
+        this.rowClassRules = {
+            'red-900': 'data.Quote.pct_change < 0',
+            'green-900': 'data.Quote.pct_change > 0',
+        };
+
     }
 
 
@@ -41,18 +77,26 @@ export class FolioComponent extends BaseComponent implements OnInit {
         this.folioForm = this._formBuilder.group({
             PieId: [],
             Amount: [100, Validators.required],
+            Side: ['buy'],
+            PriceWeighted: [false]
         });
 
 
         // console.log(this.token.isAuthenticated);
 
-        this.apiService.getFolio().subscribe((data) => {
+        this.apiService.getPies().subscribe((data) => {
             this.Pies = data;
         });
 
     }
 
-    public savePie(){
+    selectOrderSide(val: string): void {
+        this.folioForm.controls.Side.setValue(val);
+        this.orderSide = val;
+    }
+
+
+    public savePie() {
         // console.log(this.PieDetails);
         this.apiService.savePieDetail(this.PieDetails).subscribe((data) => {
             console.log(data);
@@ -61,23 +105,23 @@ export class FolioComponent extends BaseComponent implements OnInit {
     }
 
     public addNew() {
-        const pie: ApiModel.PieDetail = {Id: 0, Symbol: '', Weight: 0, PieId: this.folioForm.controls.PieId.value, Enabled: true };
+        const pie: ApiModel.PieDetail = { Id: 0, Symbol: '', Weight: 0, PieId: this.folioForm.controls.PieId.value, Enabled: true };
         this.PieDetails.push(pie);
-      }
+    }
 
     public calcTotal(val: number) {
         this.Total = this.getTotal();
-      }
+    }
 
     private getTotal() {
         return this.PieDetails.reduce((a, b) => Number(a) + Number((b['Weight'] || 0)), 0);
-      }
+    }
 
     selectFolio(pie): void {
         this.folioForm.controls.PieId.setValue(pie.Id);
         this.pieValue = pie.Name;
 
-        this.apiService.getPieDetail(pie.Id).subscribe((data) => {
+        this.apiService.getPieDetail(pie.Id, 'q').subscribe((data) => {
             this.PieDetails = data;
             this.Total = this.getTotal();
         });
@@ -93,12 +137,18 @@ export class FolioComponent extends BaseComponent implements OnInit {
 
 
     placeFolioOrder(): void {
+        // console.log(this.folioForm.value);
         this.Globals.IsBusy = true;
         this.apiService.placeFolioOrder(this.folioForm.value).subscribe((data) => {
-            // console.log(data);
-            this.dataSource = data;
+            this.apiService.setMessage2(data);
+            this.dataSource = data.Object;
             this.Globals.IsBusy = false;
         });
+    }
+
+    onGridReady(params) {
+        this.gridApi = params.api;
+        this.gridApi.sizeColumnsToFit();
     }
 
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Weib0/pBmdoIwCuxancGK6G1B5E1wyo+u48hDH0ZFR3pZHAkxSmLHGzACbBxSwneQkKbm7b8kZzaLjsOZp7IEg==",
+  "dgSpecHash": "6Aq7M72L6z4AwRTNWgt3wJcCqmCCl0tLtC1ndl9fNxu+ZIADFxmBeLZRPmuZ6u3a31pV4Pocb2MMNASQujWy5A==",
   "success": true,
-  "projectFilePath": "C:\\My Stuff\\Dev\\Trading\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
+  "projectFilePath": "C:\\My Stuff\\Dev\\TradeRobo\\TradeRoboWPF\\TradeRoboWPF.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umang\\.nuget\\packages\\csvhelper\\15.0.5\\csvhelper.15.0.5.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
@@ -33,6 +33,7 @@
     "C:\\Users\\umang\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\umang\\.nuget\\packages\\oauth.dotnetcore\\3.0.1\\oauth.dotnetcore.3.0.1.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\umang\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",

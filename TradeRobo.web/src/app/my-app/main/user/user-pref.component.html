@@ -1,0 +1,25 @@
+<div fxLayout="column" fxFlex="1 0 auto">
+    <app-header [Title]="'User Settings'" ></app-header>
+
+    <div class="p-16" fxLayout="column" fxLayoutGap="16px">
+
+        <div class="mb-24 mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start">
+
+            <div fxLayout="row">
+
+                <form fxLayoutGap="8px" fxLayout="column" fxFlex="30">
+
+
+
+                    <div fxFlex="30">
+                        <button class="warn mat-raised-button" type="submit" (click)="clearToken()">
+                            Clear Robinhood Authentication
+                        </button>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>

@@ -50,9 +50,33 @@ namespace TradeRobo.Controllers
         {
             var id = GetUserId();
            
-              return  _service.SaveUser(user, id);
+              return  _service.SaveNewUser(user, id);
             
         }
+
+
+        [HttpPost]
+        [Route("profile")]
+        public ReturnType SaveProfile(User user)
+        {
+            var id = GetUserId();
+            return _service.SaveUser(user, id);
+
+        }
+
+
+        [HttpPost]
+        [Route("changepassword")]
+        public async Task<ReturnType> ChangePassword(PasswordRequest poco)
+        {
+            var id = GetUserId();
+
+            return await _service.ChangePassword(poco, id);
+
+        }
+
+
+        
 
 
         [AllowAnonymous]
@@ -93,6 +117,7 @@ namespace TradeRobo.Controllers
 
         [HttpGet]
         [Route("user")]
+        [Authorize(Roles = Roles.Admin)]
         public User GetCurrentUser()
         {
             var id = GetUserId();

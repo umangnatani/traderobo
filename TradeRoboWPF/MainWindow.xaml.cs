@@ -47,11 +47,11 @@ namespace TradeRoboWPF
         {
             //TDLogin();
 
-            var tdOrder = new TDOrder { Symbol = Symbol.Text , Price = Convert.ToDouble(Price.Text), Quantity =  Convert.ToInt32(Quantity.Text) , Increment = Convert.ToDouble(Increment.Text), Total = Convert.ToInt32(Total.Text) };
+            var tdOrder = new OrderGroup { Symbol = Symbol.Text , Price = Convert.ToDecimal(Price.Text), Quantity =  Convert.ToInt32(Quantity.Text) , Increment = Convert.ToDecimal(Increment.Text), Total = Convert.ToInt32(Total.Text) };
 
             //var tdOrder = new TDOrder { Symbol = "KBE", Price = 26.25, Quantity = 10, Increment = .2, Total = 5 };
 
-            orderService.PlaceTDOrder(tdOrder, 1);
+            orderService.PlaceOrder(tdOrder);
 
             //client.PlaceOrder(tdOrder, token);
 

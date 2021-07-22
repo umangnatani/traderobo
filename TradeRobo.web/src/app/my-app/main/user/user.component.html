@@ -1,0 +1,37 @@
+<div fxLayout="column" fxFlex="1 0 auto">
+    <app-header></app-header>
+
+    <div class="p-16" fxLayout="column" fxLayoutGap="16px">
+
+        <div class="mb-24 mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="h2 mb-24" fxFlex>Add a new User</div>
+
+            <div fxLayout="row">
+
+                <form [formGroup]="form" fxLayoutGap="8px" fxLayout="column" fxFlex="30">
+
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="UserName" required />
+                        <mat-error>Username is required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput formControlName="Password" required type="password" />
+                        <mat-error>Password is required!</mat-error>
+                    </mat-form-field>
+
+                    <div fxFlex="30">
+                        <button class="warn mat-raised-button" type="submit" (click)="save()"
+                            [disabled]="this.Globals.IsBusy">
+                            Save User
+                        </button>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>

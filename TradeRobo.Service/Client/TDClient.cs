@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 
+
 namespace TradeRobo.Service
 {
     public class TDClient
@@ -33,13 +34,11 @@ namespace TradeRobo.Service
                 client.SetHeaders(_token.access_token);
 
                 var payload = new Dictionary<string, string>();
-
-                payload.Add("apikey", Settings.TDClientId);
                 payload.Add("symbol", symbol);
 
-                var json = client.Get(TDEndPoint.Quotes, payload);
+                var json = client.Get(EndPoint.Quotes, payload);
 
-                list = JsonConvert.DeserializeObject<Dictionary<string, GlobalQuote>> (json);
+                list = JsonConvert.DeserializeObject<Dictionary<string, GlobalQuote>>(json);
             }
             catch (UnauthorizedAccessException e)
             {
@@ -51,25 +50,21 @@ namespace TradeRobo.Service
         }
 
 
+      
+
         public void GetAccount()
         {
-
-
-            //var payload = new Dictionary<string, string>();
-
-            //payload.Add("apikey", Settings.TDClientId);
-            //payload.Add("symbol", symbol);
 
             try
             {
 
                 client.SetHeaders(_token.access_token);
 
-                var response = client.Get(TDEndPoint.Accounts);
+                //var response = client.Get(EndPoint.Accounts);
 
-                var json = (JObject)JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(response)[0]["securitiesAccount"];
+                //var json = (JObject)JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(response)[0]["securitiesAccount"];
 
-                _token.userName = json.GetValue("accountId").ToString();
+                //_token.userName = json.GetValue("accountId").ToString();
             }
             catch (UnauthorizedAccessException e)
             {
@@ -84,11 +79,12 @@ namespace TradeRobo.Service
 
 
 
-        public void PlaceOrder(TDOrder order)
+        public void PlaceOrder(Order order)
         {
+            order.OrderGroup.InitTDOrder();
 
             GetAccount();
-            var APIEndPoint = TDEndPoint.Orders.Replace("{accountId}", _token.userName);
+            var APIEndPoint = EndPoint.Orders.Replace("{accountId}", order.TDAccountId);
 
 
             //order.Quote = get_quotes(order.Symbol);
@@ -98,18 +94,19 @@ namespace TradeRobo.Service
 
 
             payload.Add("session", "NORMAL");
-            payload.Add("orderStrategyType", order.OrderStrategyType);
-            payload.Add("duration", order.TimeInForce);
-            payload.Add("orderType", order.Type);
+            payload.Add("orderStrategyType", order.OrderGroup.TDOrderStrategyType);
+            payload.Add("duration", order.OrderGroup.TimeInForce);
+            payload.Add("orderType", order.OrderGroup.Type);
 
-            payload.Add("price", order.Price);
+            if (order.OrderGroup.Type.ToLower() == "limit")
+                payload.Add("price", order.Price.RoundDecimal());
 
 
             var orderLeg = new Dictionary<string, object>();
 
             var orderLegCollection = new List<Dictionary<string, object>>();
 
-            orderLeg.Add("instruction", order.Side);
+            orderLeg.Add("instruction", order.OrderGroup.Side);
 
             orderLeg.Add("quantity", order.Quantity);
 
@@ -124,20 +121,33 @@ namespace TradeRobo.Service
 
             payload.Add("orderLegCollection", orderLegCollection);
 
-
-
-            try
+            if (order.Quantity > 0)
             {
-                var returnValue = client.Post(APIEndPoint, payload);
-
-                var json = JsonConvert.DeserializeObject<Dictionary<string, object>>(returnValue);
 
 
+                try
+                {
+                    var returnValue = client.Post(APIEndPoint, payload);
+
+                    var json = JsonConvert.DeserializeObject<Dictionary<string, object>>(returnValue);
+
+                    order.Success = true;
+
+
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    Authenticate();
+                    PlaceOrder(order);
+                }
+                catch (Exception e)
+                {
+                    order.ExecMessage = $"Order failed for {order.Symbol} with error: {e.Message}";
+                }
             }
-            catch (Exception e)
-            {
-                order.Result = $"Order failed for {order.Symbol} with error: {e.Message}";
-            }
+            else
+                order.ExecMessage = $"Order failed for {order.Symbol} with 0 quantity";
+
 
 
         }
@@ -145,23 +155,38 @@ namespace TradeRobo.Service
 
 
 
-        public void Authenticate()
+        public void Authenticate(String Code = "")
         {
 
             var payload = new List<KeyValuePair<string, string>>();
             //payload.Add("client_id", Settings.ClientId + "@AMER.OAUTHAP");
-            payload.Add(new KeyValuePair<string, string>("client_id", Settings.TDClientId));
-            payload.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
-            payload.Add(new KeyValuePair<string, string>("refresh_token", _token.refresh_token));
-            payload.Add(new KeyValuePair<string, string>("access_type", ""));
-            payload.Add(new KeyValuePair<string, string>("code", ""));
-            payload.Add(new KeyValuePair<string, string>("redirect_uri", ""));
+
+            if (!string.IsNullOrWhiteSpace(Code))
+            {
+                payload.Add(new KeyValuePair<string, string>("client_id", Settings.TDClientId + "@AMER.OAUTHAP"));
+                payload.Add(new KeyValuePair<string, string>("grant_type", "authorization_code"));
+                payload.Add(new KeyValuePair<string, string>("refresh_token", ""));
+                payload.Add(new KeyValuePair<string, string>("access_type", "offline"));
+                payload.Add(new KeyValuePair<string, string>("code", Code));
+                payload.Add(new KeyValuePair<string, string>("redirect_uri", Settings.TDRedirectURI));
+            }
+
+            else
+            {
+
+                payload.Add(new KeyValuePair<string, string>("client_id", Settings.TDClientId));
+                payload.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
+                payload.Add(new KeyValuePair<string, string>("refresh_token", _token.refresh_token));
+                payload.Add(new KeyValuePair<string, string>("access_type", ""));
+                payload.Add(new KeyValuePair<string, string>("code", ""));
+                payload.Add(new KeyValuePair<string, string>("redirect_uri", ""));
+            }
             //payload.Add("access_type", "offline");
             //payload.Add("redirect_uri", Settings.TDRedirectURI);
             //payload.Add("code", code);
 
 
-            var response = client.PostAsForm(TDEndPoint.Login, payload);
+            var response = client.PostAsForm(EndPoint.Login, payload);
 
             var result = JsonConvert.DeserializeObject<TDToken>(response);
 
@@ -174,6 +199,11 @@ namespace TradeRobo.Service
                 //TDSettings.access_token = _token.access_token;
                 //TDSettings.expires_in = DateTime.Now.AddMinutes(30);
                 //token.refresh_token = Helper.Encrypt(token.refresh_token);
+            }
+
+            if (!string.IsNullOrEmpty(result.refresh_token))
+            {
+                _token.refresh_token = result.refresh_token;
             }
 
             //token.userName = loginDetails.userName;

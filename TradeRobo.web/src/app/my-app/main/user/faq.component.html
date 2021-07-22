@@ -1,0 +1,47 @@
+<div fxLayout="column" fxFlex="1 0 auto">
+    <app-header [Title]="'FAQ'"></app-header>
+
+    <div class="p-16" fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row" fxLayoutGap="16px">
+
+        <div class="mb-24 mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" fxFlex="0 1 50">
+            <p class="blue-900-fg">
+                Not getting realtime quote or trouble placing order.
+            </p>
+            <p class="pb-24" style="border-bottom: 1px solid #c1c1c1;">
+                Most probably your Robinhood Authentication token has expired. 
+                <br />
+                Go to Preferences and click on "Clear
+                Robinhood Authentication" which will prompt you to re-authenticate with Robinhood.
+                <br />
+                Or if the problem still persits, try removing the dervice from your Robinhood App as in the screenshot.
+            </p>
+            <p class="blue-900-fg">
+                How does Robinhood Authentication work?
+            </p>
+            <p class="pb-24" style="border-bottom: 1px solid #c1c1c1;">
+                When you authenticate to Robinhood with your UserName and Password, a MFA token is sent to your
+                registered phone via text.
+                <br />
+                Once MFA token is verified, a Robinhood access token is generated and stored with 128 bit encryption and
+                expiry date.
+                <br />
+                The Robinhood UserName and Password are never stored and once the token expires, you will need to
+                re-authenticate.
+            </p>
+            <p class="blue-900-fg">
+                What is "Use Price Weighted Strategy" in a Pie Order.
+            </p>
+            <p>
+                If you select this option, the weight of stocks in your Pie will be added or reduced based on the real
+                time price of the stock.
+                <br />
+                The stock which is down will have slightly more weight whereas stocks which are up will have less weight
+                depending on the percentage change (up or down).
+            </p>
+
+        </div>
+        <div fxFlex="1 0 50">
+            <img src="assets/images/reset.jpg" style="width: 25%; height: 25%;">
+        </div>
+
+    </div>

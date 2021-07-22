@@ -25,14 +25,14 @@ import { ToastrModule } from 'ngx-toastr';
 
 // Commentented out pot of box layput modules and used our layout
 // import { LayoutModule } from 'app/layout/layout.module';
-import { LayoutModule } from 'app/trade/_layout/layout.module';
-import { JwtInterceptor, ErrorInterceptor, AuthGuard, Globals  } from 'app/trade/_helpers';
-import { EnvConfigService } from './trade/_services';
+import { LayoutModule } from 'app/my-app/_shared/_layout/layout.module';
+import { JwtInterceptor, ErrorInterceptor, AuthGuard, Globals  } from 'app/my-app/_shared';
+import { EnvConfigService } from './my-app/_shared';
 
 const appRoutes: Routes = [
     {
         path        : 'trade',
-        loadChildren: './trade/trade.module#TradeModule'
+        loadChildren: './my-app/my-app.module#MyAppModule'
     },
 
     {
@@ -57,7 +57,7 @@ const appRoutes: Routes = [
     },
     {
         path      : '**',
-        redirectTo: 'trade/robinhood'
+        redirectTo: 'trade/td/TD'
     }
 ];
 
@@ -69,8 +69,8 @@ const appRoutes: Routes = [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        RouterModule.forRoot(appRoutes),
-        // RouterModule.forRoot(appRoutes, { useHash: true }),
+        // RouterModule.forRoot(appRoutes),
+        RouterModule.forRoot(appRoutes, { useHash: true }),
 
         TranslateModule.forRoot(),
         InMemoryWebApiModule.forRoot(FakeDbService, {

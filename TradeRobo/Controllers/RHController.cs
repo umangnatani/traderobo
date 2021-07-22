@@ -10,6 +10,8 @@ using System.Net.Http.Headers;
 using TradeRobo.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace TradeRobo.Controllers
 {
@@ -47,11 +49,57 @@ namespace TradeRobo.Controllers
 
         [HttpPost]
         [Route("order")]
-        public ReturnType PlaceOrder(Order poco)
+        public ReturnType PlaceOrder(OrderGroup poco)
+        {
+            InitTradeService();
+            poco.Broker = "RH";
+            return _service.PlaceOrder(poco);
+        }
+
+        [HttpGet]
+        [Route("position")]
+        public List<RHPosition> GePositions()
+        {
+            InitTradeService();
+            return JsonConvert.DeserializeObject<List<RHPosition>>(System.IO.File.ReadAllText("position.json"));
+            // return _service.GePositions();
+        }
+
+        [HttpPost]
+        [Route("buyback")]
+        public ReturnType BuyBackPositions(List<Order> poco)
+        {
+            InitTradeService();
+            return _service.PlaceOrder(poco);
+        }
+
+        [HttpGet]
+        [Route("buyback")]
+        public List<Order> GeBuyBackPositions()
+        {
+            InitTradeService();
+            return _service.GetBuyBackPositions();
+        }
+
+        [HttpPost]
+        [Route("order/all")]
+        public ReturnType PlaceAllOrder(List<RHPosition> poco)
         {
             InitTradeService();
 
-            return _service.PlaceOrder(poco);
+            return _service.PlaceAllOrder(poco);
+
+        }
+
+
+        [HttpPost]
+        [Route("order/multi")]
+        public ReturnType PlaceMultiOrder(MultiOrder poco)
+        {
+            InitTradeService();
+
+            return _service.PlaceMultiOrder(poco);
+
         }
 
 

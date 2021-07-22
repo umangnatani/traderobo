@@ -1,0 +1,143 @@
+<div id="forms" class="page-layout simple fullwidth" fxLayout="column">
+    <app-header [Title]="'Multi Ticker'"></app-header>
+
+    <!-- CONTENT -->
+    <div ngClass="content p-24" ngClass.xs="content p-4">
+        <mat-spinner diameter="30" *ngIf="Globals.IsBusy"></mat-spinner>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap.xs="8px" fxLayoutGap="32px">
+
+
+            <div fxLayout="row" fxLayoutGap="32px" fxLayoutGap.xs="8px">
+
+                <div fxLayout="column" fxLayoutGap="8px" fxFlex="noshrink">
+                    <ng-container *ngFor="let Watchlist of Watchlists">
+                        <mat-card [ngClass]="Watchlist.Id == watchlistId ? 'purple-900': 'fuse-white-500'" class="mb-8"
+                            (click)="selectWatchlist(Watchlist)">
+                            {{ Watchlist.Name }}</mat-card>
+                    </ng-container>
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="8px" *ngIf="showTrade">
+
+                    <form class="mat-card mat-elevation-z4" [formGroup]="folioForm" fxLayout="column" fxLayoutGap="8px">
+
+                        <div fxLayout="row" fxLayoutGap="8px">
+                            <mat-card [ngClass]="orderSide == 'buy'? 'green-800': 'folio'" class="mb-24" fxFlex
+                                (click)="selectOrderSide('buy')">Want</mat-card>
+                            <mat-card [ngClass]="orderSide == 'sell'? 'pink': 'folio'" class="mb-24" fxFlex
+                                (click)="selectOrderSide('sell')">Don't want</mat-card>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutGap="8px">
+                            <mat-card [ngClass]="orderType == 'multi'? 'purple-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectOrderType('multi')">Multi</mat-card>
+                            <mat-card [ngClass]="orderType == 'single'? 'brown-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectOrderType('single')">Single</mat-card>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutGap="8px">
+                            <mat-card [ngClass]="broker == 'RH'? 'green-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('RH')">Hood</mat-card>
+                            <mat-card [ngClass]="broker == 'TD'? 'blue-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('TD')">TD</mat-card>
+                            <!-- <mat-card [ngClass]="broker == 'ALLY'? 'blue-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('ALLY')">Ally</mat-card> -->
+                        </div>
+
+                        <div fxLayout="row" fxLayoutGap="8px">
+                            <ng-container *ngFor="let TDAccount of TDAccounts">
+                                <mat-card [ngClass]="TDAccount.AccountId == TDAccountId ? 'purple-900': 'fuse-white-500'" 
+                                    (click)="selectAccount(TDAccount)">
+                                    {{ TDAccount.AccountName }}</mat-card>
+                            </ng-container>
+                        </div>
+
+
+                        <ng-container *ngIf="orderType == 'multi'">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Amount</mat-label>
+                                <input matInput formControlName="Amount" />
+
+                            </mat-form-field>
+                        </ng-container>
+
+                        <ng-container *ngIf="orderType == 'single'">
+
+                            <div class="red-900-fg mx-8">
+                                <strong> {{CurSymbol}} </strong>
+                            </div>
+
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Quantity</mat-label>
+                                <input matInput formControlName="Quantity" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Price</mat-label>
+                                <input matInput formControlName="Price" />
+                            </mat-form-field>
+
+                            <div>
+                                <mat-checkbox (change)="showAdvanced = $event.checked" >Advanced</mat-checkbox>
+                            </div>
+
+                            <div fxFlex.lt-sm="100" *ngIf="showAdvanced">
+                                <mat-form-field appearance="outline" fxFlex.lt-sm="90">
+                                    <mat-label>Increment</mat-label>
+                                    <input matInput formControlName="Increment" />
+                                </mat-form-field>
+                            </div>
+
+                            <div fxFlex.lt-sm="100" *ngIf="showAdvanced">
+                                <mat-form-field appearance="outline" fxFlex.lt-sm="90">
+                                    <mat-label>Total</mat-label>
+                                    <input matInput formControlName="Total" />
+                                </mat-form-field>
+                            </div>
+
+                        </ng-container>
+
+                        <button class="warn mat-raised-button" mat-raised-button="" (click)="placeOrder()"
+                            [disabled]="Globals.IsBusy">
+                            <span class="mat-button-wrapper"> Go for it </span>
+                        </button>
+                        <!-- <button class="accent mat-raised-button" mat-raised-button="" (click)="placeTDOrder()"
+                        [disabled]="Globals.IsBusy">
+                        <span class="mat-button-wrapper"> Place TD Order </span>
+                    </button> -->
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+            <div fxFlex=60 fxFlex.xs=100>
+            <ag-grid-angular style="height: 750px;" class="ag-theme-alpine" [rowData]="dataSource"
+                [columnDefs]="columnDefs" [rowClassRules]="rowClassRules" [defaultColDef]="defaultColDef"
+                [rowSelection]="rowSelection" [rowMultiSelectWithClick]="true" (gridReady)="onGridReady($event)"
+                (rowSelected)="onRowSelected($event)">
+            </ag-grid-angular>
+            <form class="mat-card mat-elevation-z4 mt-16" [formGroup]="form" fxLayout="column" *ngIf="isEdit">
+                <mat-form-field appearance="outline">
+                    <mat-label>Symbols</mat-label>
+                    <input matInput formControlName="Symbols" />
+                </mat-form-field>
+
+                <button class="accent mat-raised-button" mat-raised-button="" (click)="saveWatchlist()">
+                    <span class="mat-button-wrapper"> Add to Pie </span>
+                </button>
+            </form>
+        </div>
+
+
+        </div>
+
+
+
+
+    </div>

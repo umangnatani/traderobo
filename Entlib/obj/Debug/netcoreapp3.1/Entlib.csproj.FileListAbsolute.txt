@@ -1,0 +1,9 @@
+C:\My Stuff\Dev\TradeRobo\Entlib\bin\Debug\netcoreapp3.1\Entlib.deps.json
+C:\My Stuff\Dev\TradeRobo\Entlib\bin\Debug\netcoreapp3.1\Entlib.dll
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.csprojAssemblyReference.cache
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.AssemblyInfoInputs.cache
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.AssemblyInfo.cs
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.csproj.CoreCompileInputs.cache
+C:\My Stuff\Dev\TradeRobo\Entlib\bin\Debug\netcoreapp3.1\Entlib.pdb
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.dll
+C:\My Stuff\Dev\TradeRobo\Entlib\obj\Debug\netcoreapp3.1\Entlib.pdb

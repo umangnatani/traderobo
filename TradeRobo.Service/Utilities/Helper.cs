@@ -22,6 +22,7 @@ namespace TradeRobo.Service
         static Settings()
         {
             ClientId = "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS";
+            TDRedirectURI = "https://127.0.0.1";
             CSVPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"/Content/";
 
         }
@@ -29,8 +30,15 @@ namespace TradeRobo.Service
         
     }
 
+    public static class Roles
+    {
+        public const string Admin = "ADMIN";
+        public const string RH = "RH";
+        public const string TD = "TD";
+    }
 
-    
+
+
     public static class Helper
     {
 
@@ -41,17 +49,19 @@ namespace TradeRobo.Service
             Key = "glbw-1rd9-coro19";
         }
 
-      
-        public static double Round(double price)
+
+        public static decimal Round(decimal price)
         {
-            if (price <= 1e-2)
+            if (price <= 0.01M)
                 return Math.Round(price, 6);
-            else if (price < 1e0)
+            else if (price <= 1)
                 return Math.Round(price, 4);
             else
                 return Math.Round(price, 2);
 
         }
+
+
 
 
         public static string GenerateDeviceToken()
@@ -118,6 +128,14 @@ namespace TradeRobo.Service
             byte[] resultArray = cTransform.TransformFinalBlock(inputArray, 0, inputArray.Length);
             tripleDES.Clear();
             return UTF8Encoding.UTF8.GetString(resultArray);
+        }
+
+
+        public static string Hash(string inputString)
+        {
+            var data = Encoding.ASCII.GetBytes(inputString);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            return Convert.ToBase64String(data);
         }
 
     }

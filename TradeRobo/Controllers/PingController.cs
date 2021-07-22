@@ -34,6 +34,14 @@ namespace TradeRobo.Controllers
             return "pong";
         }
 
+
+        [HttpGet]
+        [Route("api/encrypt/{input}")]
+        public string GetPing(string input)
+        {
+            return Helper.Hash(input);
+        }
+
         [HttpGet]
         [Route("api/ping/db")]
         public List<Pie> GetDBPing()

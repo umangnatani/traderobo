@@ -1,0 +1,40 @@
+<div class="mb-24" fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row" fxLayoutGap="16px">
+    <form class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxFlex="1 0 auto" [formGroup]="loginForm">
+        <div class="h2 mb-24">Authenticate with Robinhood</div>
+
+
+        <mat-form-field appearance="outline" fxFlex="100" *ngIf="!showMFA">
+            <mat-label>Robinhood Username</mat-label>
+            <input matInput formControlName="userName" required />
+            <mat-error>UserName is required!</mat-error>
+        </mat-form-field>
+
+
+
+        <mat-form-field appearance="outline" fxFlex="100" *ngIf="!showMFA">
+            <mat-label>Robinhood Password</mat-label>
+            <input matInput formControlName="passWord" required type="password" />
+            <mat-error>PassWord is required!</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" fxFlex="100" *ngIf="showMFA">
+            <mat-label>MFA Token</mat-label>
+            <input matInput formControlName="mfaToken" />
+        </mat-form-field>
+
+        <div>
+
+            <button class="warn mat-raised-button" mat-raised-button="" type="submit" (click)="login()">
+                Authenticate
+            </button>
+        </div>
+
+    </form>
+    <mat-card fxFlex="0 0 50">
+        <div class="mb-16 red-900-fg">
+            Make sure 2 factor authentication with SMS is enabled for your Robinhood Account as in the screeshot below.
+        </div>
+        <img src="assets/images/2factor.jpg" style="width: 40%; height: 40%;">
+    </mat-card>
+</div>

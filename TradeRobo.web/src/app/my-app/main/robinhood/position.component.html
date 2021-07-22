@@ -1,0 +1,17 @@
+<div fxLayout="column" fxFlex="1 0 auto">
+    <app-header></app-header>
+
+    <div class="content p-24" fxLayout="column" fxLayoutGap="16px">
+        <div>
+            <button class="warn mat-raised-button" mat-raised-button="" (click)="placeOrder()">
+                <span class="mat-button-wrapper"> Sell Selected</span>
+            </button>
+        </div>
+
+        <ag-grid-angular style="width: auto; height: 800px;" class="ag-theme-alpine" [rowData]="dataSource"
+            [columnDefs]="columnDefs" [rowClassRules]="rowClassRules" [defaultColDef]="defaultColDef"
+            [rowSelection]="rowSelection" [rowMultiSelectWithClick]="true" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+
+    </div>
+</div>

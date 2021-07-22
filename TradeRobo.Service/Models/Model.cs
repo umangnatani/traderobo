@@ -5,65 +5,73 @@ using System.Text;
 namespace TradeRobo.Service
 {
 
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+    public class RHPosition
+    {
+        public string url { get; set; }
+
+        public string symbol { get; set; }
+        public string instrument { get; set; }
+        public string account { get; set; }
+        public string account_number { get; set; }
+        public string average_buy_price { get; set; }
+        public string pending_average_buy_price { get; set; }
+        public string quantity { get; set; }
+        public string intraday_average_buy_price { get; set; }
+        public string intraday_quantity { get; set; }
+        public string shares_held_for_buys { get; set; }
+        public string shares_held_for_sells { get; set; }
+        public string shares_held_for_stock_grants { get; set; }
+        public string shares_held_for_options_collateral { get; set; }
+        public string shares_held_for_options_events { get; set; }
+        public string shares_pending_from_options_events { get; set; }
+        public DateTime updated_at { get; set; }
+        public DateTime created_at { get; set; }
+
+    }
+
+
+
+    public class MultiOrder
+    {
+        public List<Quote> Symbols { get; set; }
+        public string Side { get; set; }
+        public decimal Amount { get; set; }
+        public bool PriceWeighted { get; set; }
+    }
+
+
     public class PieOrder
     {
         public int PieId { get; set; }
         public string Side { get; set; }
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public bool PriceWeighted { get; set; }
     }
 
 
 
-        public class Order
-    {
-        public string Folio { get; set; }
-        public int PieId { get; set; }
-        public string Symbol { get; set; }
-        public string Side { get; set; }
-        public string Type { get; set; }
-        public string TimeInForce { get; set; }
-
-        public bool ExtendedHours { get; set; }
-        public double Quantity { get; set; }
-        public double Price { get; set; }
-        public double Amount { get; set; }
-
-        public double Increment { get; set; }
-
-        public int Total { get; set; }
-
-        public Quote Quote { get; set; }
-
-        public int ResultCode { get; set; }
-        public string Result { get; set; }
-
-        public Order()
-        {
-            Side = "buy";
-            Type = "limit";
-            TimeInForce = "gfd";
-            ExtendedHours = false;
-            Quantity = 10;
-            ResultCode = 1;
-        }
-    }
+   
 
 
     public class ReturnType
     {
-        public int Code { get; set; }
+        public int Code { get; set; } = 1;
         public bool Success { get; set; } = true;
-        public string Message { get; set; }
+        public string Message { get; set; } = "Operation Successful.";
 
         public Object Object { get; set; }
 
-        public ReturnType()
-        {
-            Code = 1;
-            Message = "Operation Successful.";
-        }
+    }
+
+
+    public class PasswordRequest
+    {
+        public int  UserId { get; set; }
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
     }
 
     public class RHAuthResponse
@@ -119,50 +127,97 @@ namespace TradeRobo.Service
 
     }
 
+
+    public class IndexQuote
+    {
+        public string symbol { get; set; }
+
+        public string name { get; set; }
+        public decimal price { get; set; }
+        public decimal changesPercentage { get; set; }
+        public decimal change { get; set; }
+        public decimal dayLow { get; set; }
+
+    }
+
     public class GlobalQuote
     {
         public string symbol { get; set; }
-        public double bidPrice { get; set; }
-        public double askPrice { get; set; }
-        public double lastPrice { get; set; }
-        public double openPrice { get; set; }
-        public double highPrice { get; set; }
-        public double lowPrice { get; set; }
+        public decimal bidPrice { get; set; }
+        public decimal askPrice { get; set; }
+        public decimal lastPrice { get; set; }
+        public decimal openPrice { get; set; }
+        public decimal highPrice { get; set; }
+        public decimal lowPrice { get; set; }
 
-        public double closePrice { get; set; }
+        public decimal closePrice { get; set; }
 
-        public double netChange { get; set; }
-        public double netPercentChangeInDouble { get; set; }
-        public double regularMarketLastPrice { get; set; }
+        public decimal netChange { get; set; }
+        public decimal netPercentChangeInDouble { get; set; }
+        public decimal regularMarketLastPrice { get; set; }
 
 
     }
 
+
+    //public class Quote
+    //{
+    //    public string Symbol { get; set; }
+    //    public decimal Weight { get; set; }
+    //    public decimal Amount { get; set; }
+    //    public decimal ask_price { get; set; }
+    //    public decimal bid_price { get; set; }
+
+    //    public decimal last_trade_price { get; set; }
+
+    //    public decimal previous_close { get; set; }
+
+    //    public decimal price { get; set; }
+
+    //    public decimal quantity { get; set; }
+
+    //    public string instrument { get; set; }
+    //    public int ask_size { get; set; }
+    //    public int bid_size { get; set; }
+
+    //    public decimal pct_change
+    //    {
+    //        get
+    //        {
+    //            return Math.Round((last_trade_price - previous_close) * 100 / previous_close, 4);
+    //        }
+    //    }
+
+
+
+    //}
+
+
     public class Quote
     {
         public string Symbol { get; set; }
-        public double Weight { get; set; }
-        public double Amount { get; set; }
-        public double ask_price { get; set; }
-        public double bid_price { get; set; }
+        public decimal Weight { get; set; }
+        public decimal Amount { get; set; }
+        public decimal ask_price { get; set; }
+        public decimal bid_price { get; set; }
 
-        public double last_trade_price { get; set; }
+        public decimal last_trade_price { get; set; }
 
-        public double previous_close { get; set; }
+        public decimal previous_close { get; set; }
 
-        public double price { get; set; }
+        public decimal price { get; set; }
 
-        public double quantity { get; set; }
+        public decimal quantity { get; set; }
 
         public string instrument { get; set; }
         public int ask_size { get; set; }
         public int bid_size { get; set; }
 
-        public double pct_change
+        public decimal pct_change
         {
             get
             {
-                return Math.Round((last_trade_price - previous_close)*100/ previous_close, 4);
+                return Math.Round((last_trade_price - previous_close) * 100 / previous_close, 4);
             }
         }
 
@@ -173,11 +228,11 @@ namespace TradeRobo.Service
     public class Stock
     {
         public string Ticker { get; set; }
-        public double Weight { get; set; }
+        public decimal Weight { get; set; }
     }
 
 
 
-   
+
 
 }

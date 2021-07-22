@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using OAuth;
 
 
 namespace TradeRobo.Service
@@ -12,6 +13,11 @@ namespace TradeRobo.Service
     public class RestClient
     {
         private HttpClient _client;
+
+        const string ConsumerKey = "t3903BjavPCl1ohu4kMlL6YFSreBJjBWF7Suxmh3q0Q3";
+        const string ConsumerSecret = "C19mianx7G4dgqUZPaJG0xyspeHNJPhUiVt0y2xTHvs8";
+        const string OAuthToken = "1aho2OWNLNif3KZy0O2aKFUJCRYjDqK84jVlNE1TUhM8";
+        const string OAuthTokenSecret = "K3EDin3cn0MtRSdaK45EHfo3JAk08SAVtB3s2KWdS6o7";
 
         public RestClient()
         {
@@ -41,6 +47,15 @@ namespace TradeRobo.Service
         public void SetHeaders(string token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Helper.Decrypt(token));
+        }
+
+        public void SetOAuth1Headers(string url)
+        {
+            OAuthRequest authClient = OAuthRequest.ForProtectedResource("POST", ConsumerKey, ConsumerSecret, OAuthToken, OAuthTokenSecret);
+            authClient.RequestUrl = url;
+            var auth = authClient.GetAuthorizationHeader();
+
+            _client.DefaultRequestHeaders.Add("Authorization", auth);
         }
 
         //public void SetHeaders()
@@ -84,6 +99,18 @@ namespace TradeRobo.Service
             var json = JsonConvert.SerializeObject(payload);
 
             var data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = _client.PostAsync(url, data).Result;
+
+            return HandleException(response);
+
+        }
+
+        public string PostAsRaw(string url, string payload)
+        {
+            SetOAuth1Headers(url);
+
+            var data = new StringContent(payload);
 
             var response = _client.PostAsync(url, data).Result;
 

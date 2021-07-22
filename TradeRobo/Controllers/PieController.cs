@@ -15,6 +15,13 @@ namespace TradeRobo.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+
+
+    public class WatchListSymbolVM
+    {
+        public string Symbols { get; set; }
+    }
+
     public class PieController : BaseController
     {
 
@@ -36,22 +43,51 @@ namespace TradeRobo.Controllers
         }
 
 
+
+
         [HttpPost]
-        public ReturnType Save(Pie poco)
+        public async Task<ReturnType> Save(Pie poco)
         {
             if (poco.Id == 0)
                 poco.UserId = GetUserId();
 
-            return _service.SavePie(poco);
+            return await _service.Save(poco);
+        }
+
+
+        [HttpPost]
+        [Route("save")]
+        public async Task<ReturnType> Save(List<PieDetail> list)
+        {
+            foreach (var item in list)
+            {
+                item.Symbol = item.Symbol.ToUpper();
+                await _service.Save(item);
+            }
+
+            return new ReturnType();
+
+        }
+
+        [HttpPost]
+        [Route("watchlist/{Id}")]
+        public ReturnType SaveWatchListSymbols(int Id, WatchListSymbolVM poco)
+        {
+
+            return _service.SaveWatchListSymbols(Id, poco.Symbols);
+            
+
         }
 
 
 
-        [HttpGet]
-        [Route("fav")]
-        public List<FavStocks> GetAllFavStocks()
+
+        [HttpPost]
+        [Route("delete/{PieDetailId}")]
+        public ReturnType DeletePieDetail(Int32 PieDetailId)
         {
-            return _service.GetAllFavStocks();
+
+            return _service.DeletePieDetail(PieDetailId);
         }
 
 
@@ -69,38 +105,14 @@ namespace TradeRobo.Controllers
         {
             var UserId = GetUserId();
 
-            var tradeService = new TradeService(_context, UserId, true);
+            var tradeService = new TradeService(_context, UserId);
 
             return tradeService.GetPieDetailsWithQuote(PieId, true);
         }
 
 
-        //[HttpPost]
-        //[Route("save")]
-        //public string Save(List<PieDetail> list)
-        //{
-        //    foreach (var item in list)
-        //    {
-        //        _service.SavePieDetails(item);
-        //    }
 
-        //    return "Saved Details";
-
-        //}
-
-
-        [HttpPost]
-        [Route("save")]
-        public IActionResult Save(List<PieDetail> list)
-        {
-            foreach (var item in list)
-            {
-                _service.SavePieDetails(item);
-            }
-
-            return Ok(JsonConvert.SerializeObject("Saved Details successfully."));
-
-        }
+        
 
 
 

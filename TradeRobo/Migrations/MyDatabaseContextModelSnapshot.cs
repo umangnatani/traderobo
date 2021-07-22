@@ -37,26 +37,6 @@ namespace TradeRobo.Migrations
                     b.ToTable("AppSettings");
                 });
 
-            modelBuilder.Entity("TradeRobo.Service.FavStocks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Symbol")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FavStocks");
-                });
-
             modelBuilder.Entity("TradeRobo.Service.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +69,85 @@ namespace TradeRobo.Migrations
                     b.ToTable("Menu");
                 });
 
+            modelBuilder.Entity("TradeRobo.Service.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(16,4)");
+
+                    b.Property<DateTime?>("CoverTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExecMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,4)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(10,4)");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Symbol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderGroupId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.OrderGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(16,4)");
+
+                    b.Property<string>("Broker")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Side")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Strategy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OrderGroup");
+                });
+
             modelBuilder.Entity("TradeRobo.Service.Pie", b =>
                 {
                     b.Property<int>("Id")
@@ -101,6 +160,9 @@ namespace TradeRobo.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("int");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -128,8 +190,8 @@ namespace TradeRobo.Migrations
                     b.Property<string>("Symbol")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("Id");
 
@@ -187,6 +249,53 @@ namespace TradeRobo.Migrations
                     b.ToTable("RoleMenu");
                 });
 
+            modelBuilder.Entity("TradeRobo.Service.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("MarketWeight")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PieId");
+
+                    b.ToTable("Schedule");
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.TDAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AccountName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TDAccount");
+                });
+
             modelBuilder.Entity("TradeRobo.Service.User", b =>
                 {
                     b.Property<int>("Id")
@@ -197,16 +306,13 @@ namespace TradeRobo.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RHNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RHToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TDNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -215,6 +321,32 @@ namespace TradeRobo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.UserConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Editable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserConfig");
                 });
 
             modelBuilder.Entity("TradeRobo.Service.UserRole", b =>
@@ -245,18 +377,29 @@ namespace TradeRobo.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("TradeRobo.Service.FavStocks", b =>
-                {
-                    b.HasOne("TradeRobo.Service.User", "User")
-                        .WithMany("FavStocks")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("TradeRobo.Service.Menu", b =>
                 {
                     b.HasOne("TradeRobo.Service.Menu", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId");
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.Order", b =>
+                {
+                    b.HasOne("TradeRobo.Service.OrderGroup", "OrderGroup")
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.OrderGroup", b =>
+                {
+                    b.HasOne("TradeRobo.Service.User", "User")
+                        .WithMany("TradeBatch")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TradeRobo.Service.Pie", b =>
@@ -286,6 +429,24 @@ namespace TradeRobo.Migrations
                     b.HasOne("TradeRobo.Service.Role", "Role")
                         .WithMany("Menus")
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.Schedule", b =>
+                {
+                    b.HasOne("TradeRobo.Service.Pie", "Pie")
+                        .WithMany("Schedules")
+                        .HasForeignKey("PieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TradeRobo.Service.UserConfig", b =>
+                {
+                    b.HasOne("TradeRobo.Service.User", "User")
+                        .WithMany("UserConfig")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

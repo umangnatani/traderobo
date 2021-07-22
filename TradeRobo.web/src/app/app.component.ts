@@ -13,11 +13,10 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { navigation as MyNavigation } from 'app/trade/_layout/navigation';
 import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
-import { AuthenticationService, ApiService } from './trade/_services';
+import { AuthenticationService, ApiService } from './my-app/_shared';
 
 @Component({
     selector: 'app',
@@ -121,7 +120,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if (currentUser) {
             this.apiService.getMenu().subscribe((data) => {
                 this.DBNavigation = data;
-                console.log(this.DBNavigation);
+                // console.log(this.DBNavigation);
 
                 // Get default navigation
                 if (this._location.path().indexOf('fuse') >= 0) {

@@ -34,7 +34,7 @@ namespace TradeRobo.Service
 
 
 
-        public List<Order> PlaceOrder(String pie, double amount)
+        public List<Order> PlaceOrder(String pie, decimal amount)
         {
             var StockList = new List<Stock>();
 
@@ -66,14 +66,23 @@ namespace TradeRobo.Service
             return retValue;
         }
 
-        //public List<string> PlaceOrder()
-        //{
-        //    var retValue = new List<string>();
-        //    GetAccountProfile();
-        //    var result = PlaceOrder("SHOP", 20, "gfd");
-        //    retValue.Add(result);
-        //    return retValue;
-        //}
+        public List<RHPosition> GePositions()
+        {
+            var url = RHEndPoint.Positions ;
+
+            var returnValue = client.Get(url);
+
+            var json = JsonConvert.DeserializeObject<Dictionary<string, List<RHPosition>>>(returnValue)["results"];
+
+            foreach (var item in json)
+            {
+                item.symbol  = JsonConvert.DeserializeObject <Dictionary<string, string>>(client.Get(item.instrument))["symbol"];
+            }
+
+            return json;
+
+        }
+
 
 
         public string GetAccountProfile()
@@ -112,6 +121,8 @@ namespace TradeRobo.Service
         public void PlaceOrder(Order order, string AccountUrl = "")
         {
 
+            order.Success = false;
+
             if (string.IsNullOrWhiteSpace(AccountUrl))
                 AccountUrl = GetAccountProfile();
 
@@ -128,13 +139,13 @@ namespace TradeRobo.Service
             // For Dollar based amount orders
             if (order.Amount > 0)
             {
-                order.Price = Helper.Round(order.Quote.last_trade_price);
+                order.Price = order.Quote.last_trade_price ;
                 order.Quantity = Helper.Round(order.Amount / order.Price);
 
-                order.Type = "market";
+                order.OrderGroup.Type = "market";
 
                 if (order.Price * order.Quantity > order.Amount)
-                    order.Amount = Math.Round(order.Amount + .2, 1);
+                    order.Amount = Math.Round(order.Price * order.Quantity + .2M, 1);
 
                 Dictionary<string, object> child = new Dictionary<string, object>();
 
@@ -152,17 +163,17 @@ namespace TradeRobo.Service
 
 
 
-            payload.Add("price", order.Price);
+            payload.Add("price", order.Price.RoundDecimal());
 
-            payload.Add("quantity", order.Quantity);
+            payload.Add("quantity", order.Quantity.RoundDecimal()) ;
 
-            payload.Add("type", order.Type);
+            payload.Add("type", order.OrderGroup.Type );
             //payload.Add("stop_price", "");
-            payload.Add("time_in_force", order.TimeInForce);
+            payload.Add("time_in_force", order.OrderGroup.TimeInForce);
             payload.Add("trigger", "immediate");
 
-            payload.Add("side", order.Side);
-            payload.Add("extended_hours", order.ExtendedHours);
+            payload.Add("side", order.OrderGroup.Side);
+            payload.Add("extended_hours", order.OrderGroup.ExtendedHours);
 
 
     
@@ -175,8 +186,8 @@ namespace TradeRobo.Service
                 if (json.TryGetValue("id", out object value))
                 {
                     //Console.WriteLine("Order placed for " + symbol + ", id: " + value.ToString());
-                    order.Result = $"Order placed for {order.Symbol}.";
-
+                    order.ExecMessage = $"Order placed for {order.Symbol}.";
+                    order.Success = true;
                 }
                 else if (json.ContainsKey("detail"))
                 {
@@ -186,12 +197,12 @@ namespace TradeRobo.Service
                 }
                 else
                 {
-                    order.Result = $"Order failed for {order.Symbol}.";
+                    order.ExecMessage = $"Order failed for {order.Symbol}.";
                 }
             }
             catch (Exception e)
             {
-                order.Result = $"Order failed for {order.Symbol} with error: {e.Message}";
+                order.ExecMessage = $"Order failed for {order.Symbol} with error: {e.Message}";
             }
 
 

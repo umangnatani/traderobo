@@ -19,8 +19,6 @@ namespace TradeRobo.Service
         public DbSet<PieDetail> PieDetail { get; set; }
         public DbSet<AppSettings> AppSettings { get; set; }
 
-        public DbSet<FavStocks> FavStocks { get; set; }
-
         public DbSet<Menu> Menu { get; set; }
 
         public DbSet<Role> Role { get; set; }
@@ -29,9 +27,19 @@ namespace TradeRobo.Service
 
         public DbSet<UserRole> UserRole { get; set; }
 
+        public DbSet<OrderGroup> OrderGroup { get; set; }
+
+        public DbSet<Order> Order { get; set; }
+
+        public DbSet<UserConfig> UserConfig { get; set; }
+
+        public DbSet<TDAccount> TDAccount { get; set; }
+
+        public DbSet<Schedule> Schedule { get; set; }
+
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
-            
+
 
         //    modelBuilder.Entity<UserRole>()
         //        .HasKey(x => new {x.UserId, x.RoleId } );

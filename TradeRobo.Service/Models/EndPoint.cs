@@ -15,6 +15,8 @@ namespace TradeRobo.Service
         public const string Portfolio = "https://api.robinhood.com/portfolios/";
 
         public const string Accounts = "https://api.robinhood.com/accounts/";
+
+        public const string Positions = "https://api.robinhood.com/positions/?nonzero=true";
     }
 
 
@@ -24,6 +26,8 @@ namespace TradeRobo.Service
         public const string TDClientId = "TDClientId";
         public const string TDRedirectURI = "TDRedirectURI";
         public const string Key = "Key";
+        public const string RHDeviceToken = "RHDeviceToken";
+        public const string RHToken = "RHToken";
         public const string TDToken = "TDToken";
         public const string TDRefreshToken = "TDRefreshToken";
         public const string Proxy = "Proxy";
@@ -31,7 +35,7 @@ namespace TradeRobo.Service
     }
 
 
-    public static class TDEndPoint
+    public static class EndPoint
     {
         public const string Login = "https://api.tdameritrade.com/v1/oauth2/token";
 
@@ -42,7 +46,12 @@ namespace TradeRobo.Service
         public const string Portfolio = "https://api.robinhood.com/portfolios/";
 
         public const string Accounts = "https://api.tdameritrade.com/v1/accounts";
+
+        public const string AllyOrders = "https://devapi.invest.ally.com/v1/accounts/{accountId}/orders.json";
     }
+
+
+   
 
 
 }

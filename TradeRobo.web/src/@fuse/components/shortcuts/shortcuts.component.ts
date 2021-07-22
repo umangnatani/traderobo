@@ -81,7 +81,7 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     title: 'Robinhood',
                     type : 'item',
-                    icon : 'multiple_stop',
+                    icon : 'attach_money',
                     url  : '/trade/robinhood'
                 },
                 {
@@ -89,12 +89,6 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy
                     type : 'item',
                     icon : 'pie_chart',
                     url  : '/trade/pie'
-                },
-                {
-                    title: 'TD',
-                    type : 'item',
-                    icon : 'attach_money',
-                    url  : '/trade/td'
                 },
                 {
                     title: 'User',

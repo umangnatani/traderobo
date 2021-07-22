@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRobo.Service", "TradeR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeRoboWPF", "TradeRoboWPF\TradeRoboWPF.csproj", "{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeRoboJob", "TradeRoboJob\TradeRoboJob.csproj", "{A4E1E895-A9A4-4968-A926-C02C15E14A26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13A66BAE-E2E0-400E-95CF-34D32BDCEAFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E1E895-A9A4-4968-A926-C02C15E14A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E1E895-A9A4-4968-A926-C02C15E14A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E1E895-A9A4-4968-A926-C02C15E14A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E1E895-A9A4-4968-A926-C02C15E14A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

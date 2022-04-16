@@ -20,6 +20,16 @@ namespace TradeRobo.Service
     }
 
 
+    public static class AlpacaEndPoint
+    {
+
+        //public const string Orders = "https://paper-api.alpaca.markets/v2/orders";
+        public const string Orders = "https://api.alpaca.markets/v2/orders";
+        public const string Positions = "https://api.alpaca.markets/v2/positions";
+        public const string Account = "https://api.alpaca.markets/v2/account";
+    }
+
+
     public static class SettingsKey
     {
         public const string RHClientId = "RHClientId";
@@ -32,6 +42,8 @@ namespace TradeRobo.Service
         public const string TDRefreshToken = "TDRefreshToken";
         public const string Proxy = "Proxy";
         public const string UseProxy = "UseProxy";
+        public const string AlpacaKey = "AlpacaKey";
+        public const string AlpacaSecret = "AlpacaSecret";
     }
 
 
@@ -40,6 +52,10 @@ namespace TradeRobo.Service
         public const string Login = "https://api.tdameritrade.com/v1/oauth2/token";
 
         public const string Quotes = "https://api.tdameritrade.com/v1/marketdata/quotes";
+
+        public const string CMLQuotes = "https://www.cmlviz.com/get_live_quotes.php?tickers=";
+
+        public const string MAs = "https://www.cmlviz.com/get_live_technicals.php?tickers=";
 
         public const string Orders = "https://api.tdameritrade.com/v1/accounts/{accountId}/orders";
 

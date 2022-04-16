@@ -47,14 +47,6 @@ namespace TradeRobo.Controllers
         }
 
 
-        [HttpPost]
-        [Route("order")]
-        public ReturnType PlaceOrder(OrderGroup poco)
-        {
-            InitTradeService();
-            poco.Broker = "RH";
-            return _service.PlaceOrder(poco);
-        }
 
         [HttpGet]
         [Route("position")]
@@ -92,27 +84,7 @@ namespace TradeRobo.Controllers
         }
 
 
-        [HttpPost]
-        [Route("order/multi")]
-        public ReturnType PlaceMultiOrder(MultiOrder poco)
-        {
-            InitTradeService();
-
-            return _service.PlaceMultiOrder(poco);
-
-        }
-
-
-        [HttpPost]
-        [Route("order/pie")]
-        public ReturnType PlacePieOrder(PieOrder poco)
-        {
-            InitTradeService();
-
-            return _service.PlaceOrder(poco);
-
-        }
-
+       
 
               
 

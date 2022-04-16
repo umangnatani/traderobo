@@ -20,6 +20,10 @@ export class PositionComponent extends BaseComponent implements OnInit, OnDestro
 
     rowSelection;
 
+    cash;
+    portfolio_value;
+    buying_power;
+
     // columnDefs = [
     //     {field: 'Symbol' },
     //     {field: 'Weight' }
@@ -29,13 +33,50 @@ export class PositionComponent extends BaseComponent implements OnInit, OnDestro
 
 
     columnDefs = [
-        { field: "symbol" },
+        { field: "symbol",
+        cellClass: "text-bold", },
 
+       
+       
         {
-            field: "quantity"
+            field: "current_price",
+            headerName: "Last Price",
+            cellClass: "text-bold",
+            cellClassRules: {
+                "red-900-fg": "data.isRed",
+                "green-900-fg": "!data.isRed",
+              },
+            valueFormatter: params => params.value.toFixed(2),
         },
         {
-            field: "average_buy_price",
+            field: "pct_change",
+            headerName: "% Change",
+            cellStyle: { "font-weight": "bold" },
+            cellClassRules: {
+                "red-900-fg": "data.isRed",
+                "green-900-fg": "!data.isRed",
+              },
+            valueFormatter: (params) => {
+                return params.value.toFixed(2) + "%";
+            },
+        },
+        {
+            field: "market_value",
+            headerName: "Equity",
+            cellClass: "text-bold blue-900-fg",
+            valueFormatter: params => params.value.toFixed(2),
+        },
+        {
+            field: "avg_entry_price",
+            headerName: "Entry Price",
+            cellClass: "text-bold blue-fg",
+            valueFormatter: params => params.value.toFixed(2),
+        },
+        {
+            field: "qty",
+            headerName: "Quantity",
+            cellClass: "text-bold",
+            valueFormatter: params => params.value.toFixed(2),
         },
     ];
 
@@ -59,11 +100,13 @@ export class PositionComponent extends BaseComponent implements OnInit, OnDestro
     }
 
   ngOnInit(): void {
-    this.apiService.setTile('Robinhood Positions');
 
-    this.apiService.getPositions().subscribe((data) => {
+    this.apiService.getTradingAccount().subscribe((data) => {
         // console.log(data);
-        this.dataSource = data;
+        this.dataSource = data['positions'];
+        this.cash = data['cash'];
+        this.portfolio_value = data['portfolio_value'];
+        this.buying_power = data['buying_power'];
     });
   }
 

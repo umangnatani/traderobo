@@ -37,6 +37,7 @@ namespace TradeRobo.Service
     {
         public List<Quote> Symbols { get; set; }
         public string Side { get; set; }
+        public string Broker { get; set; }
         public decimal Amount { get; set; }
         public bool PriceWeighted { get; set; }
     }
@@ -46,6 +47,8 @@ namespace TradeRobo.Service
     {
         public int PieId { get; set; }
         public string Side { get; set; }
+
+        public string Broker { get; set; }
 
         public decimal Amount { get; set; }
         public bool PriceWeighted { get; set; }
@@ -140,9 +143,29 @@ namespace TradeRobo.Service
 
     }
 
+    public class MovingAverage 
+    {
+        public decimal ma5 { get; set; }
+        public decimal ma8 { get; set; }
+        public decimal ma10 { get; set; }
+        public decimal ma13 { get; set; }
+        public decimal ma21 { get; set; }
+        public decimal ma50 { get; set; }
+        public decimal ma200 { get; set; }
+
+        public string Ticker { get; set; }
+    }
+
     public class GlobalQuote
     {
         public string symbol { get; set; }
+
+        public bool isRed {
+            get
+            {
+                return percentChange < 0 ? true : false;
+            }
+        }
         public decimal bidPrice { get; set; }
         public decimal askPrice { get; set; }
         public decimal lastPrice { get; set; }
@@ -150,11 +173,17 @@ namespace TradeRobo.Service
         public decimal highPrice { get; set; }
         public decimal lowPrice { get; set; }
 
+       
+
         public decimal closePrice { get; set; }
 
         public decimal netChange { get; set; }
+
+        public decimal percentChange { get; set; }
         public decimal netPercentChangeInDouble { get; set; }
         public decimal regularMarketLastPrice { get; set; }
+
+        // public MovingAverage MA { get; set; } = new MovingAverage();
 
 
     }

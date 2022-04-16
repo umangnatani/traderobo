@@ -55,8 +55,9 @@ namespace TradeRobo.Controllers
             var Id = GetUserId();
 
             TradeService service = new TradeService(_context, Id);
+            poco.Broker = "td";
 
-            return service.PlaceMultiOrder(poco, "TD", accountId);
+            return service.PlaceMultiOrder(poco, accountId);
 
         }
 

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ApiService, NotificationService, BaseComponent, Globals } from 'app/my-app/_shared';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -15,15 +16,22 @@ import { ApiService, NotificationService, BaseComponent, Globals } from 'app/my-
 
 
 export class RobinhoodComponent extends BaseComponent implements OnInit, OnDestroy {
+
+    broker: string;
     
 
     constructor(
         private _formBuilder: FormBuilder,
         public apiService: ApiService,
         private notificationService: NotificationService,
-        private globals: Globals
+        private globals: Globals,
+        private route: ActivatedRoute
     ) {
         super(apiService);
+
+        this.route.paramMap.subscribe(params => {
+            this.ngOnInit();
+        });
 
     }
 
@@ -35,11 +43,7 @@ export class RobinhoodComponent extends BaseComponent implements OnInit, OnDestr
      * On init
      */
     ngOnInit(): void {
-        // Reactive Form
-        // this.globals.PageTitle = 'Place a Robinhood Trade';
-        this.apiService.setTile('Place a Robinhood Trade');
-        // this.apiService.Error = 'An Error';
-
+        this.broker = this.route.snapshot.paramMap.get('broker')
     }
 
     

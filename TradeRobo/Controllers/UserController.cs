@@ -102,7 +102,7 @@ namespace TradeRobo.Controllers
             {
                 var fuseMenu = new FuseMenu { id = item.Title, title = item.Title, icon = item.Icon, type = item.Type, url = item.Url };
                 
-                foreach (var child in item.Children )
+                foreach (var child in item.Children.OrderBy(x=> x.SortOrder) )
                 {
                     fuseMenu.children.Add(new FuseMenu { id = child.Title, title = child.Title, icon = child.Icon, type = child.Type, url = child.Url});
                 }

@@ -39,17 +39,17 @@ import { AuthenticateComponent } from './main/td/authenticate.component';
 
 const routes: Routes = [
     {
-        path     : 'robinhood',
+        path     : 'pie-trade/:broker',
         component: RobinhoodComponent,
         canActivate: [AuthGuard]
     },
     {
-        path     : 'td',
+        path     : 'trade',
         component: TDOrderComponent,
         canActivate: [AuthGuard]
     },
     {
-        path     : 'td/:broker',
+        path     : 'trade/:broker',
         component: TDOrderComponent,
         canActivate: [AuthGuard]
     },

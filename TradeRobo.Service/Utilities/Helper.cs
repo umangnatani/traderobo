@@ -19,6 +19,9 @@ namespace TradeRobo.Service
 
         public const string AVKey = "ZIRV238H7WHUQ7YH";
 
+        public static string AlpacaKey { get; set; }
+        public static string AlpacaSecret { get; set; }
+
         static Settings()
         {
             ClientId = "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS";

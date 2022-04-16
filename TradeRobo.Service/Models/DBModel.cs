@@ -78,6 +78,7 @@ namespace TradeRobo.Service
         public bool Active { get; set; }
         public string Url { get; set; }
         public int? ParentId { get; set; }
+        public int? SortOrder { get; set; }
         public HashSet<Menu> Children { get; set; }
         public Menu Parent { get; set; }
         public ICollection<RoleMenu> Roles { get; set; } = new List<RoleMenu>();
@@ -214,8 +215,29 @@ namespace TradeRobo.Service
         public int PieId { get; set; }
         public string Symbol { get; set; }
 
-        [Column(TypeName = "decimal(10,4)")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Weight { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma5 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma8 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma10 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma13 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma21 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma50 { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal ma200 { get; set; }
         public Pie Pie { get; set; }
         public bool Enabled { get; set; } = true;
     }

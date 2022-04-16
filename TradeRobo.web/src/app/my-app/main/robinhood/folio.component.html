@@ -1,14 +1,24 @@
-<div class="mb-24 mat-card mat-elevation-z4" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start">
+<div class="" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start">
 
     <div class="mb-24 mat-card mat-elevation-z4" fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="start">
         <!-- REACTIVE FORM EXAMPLE -->
 
         <div fxLayout="column">
-            <div class="h2 mb-24">Pie Order By Amount</div>
+            
             <mat-spinner diameter="30" *ngIf="Globals.IsBusy"></mat-spinner>
+
+            <div fxLayout="row" fxLayoutGap="8px">
+                <mat-card [ngClass]="broker == 'alpaca'? 'blue-500': 'folio'" class="mb-24" fxFlex
+                    (click)="selectBroker('alpaca')">Alpaca</mat-card>
+                <mat-card [ngClass]="broker == 'robinhood'? 'green-500': 'folio'" class="mb-24" fxFlex
+                    (click)="selectBroker('robinhood')">Hood</mat-card>
+                    
+                
+            </div>
+            <hr/>
             <div class="mb-24" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="flex-start">
                 <ng-container *ngFor="let pie of Pies">
-                    <mat-card [ngClass]="pie.Name == pieValue? 'purple': 'fuse-white-500'" class="mb-24"
+                    <mat-card [ngClass]="pie.Id == pieId? 'purple': 'fuse-white-500'" class="mb-24"
                         fxFlex="0 1 calc(33% - 16px)" fxFlex.lt-sm="0 1 calc(50% - 16px)" (click)="selectFolio(pie)">
                         {{ pie.Name }}</mat-card>
                 </ng-container>
@@ -54,7 +64,7 @@
                     <ng-container matColumnDef="Result">
                         <mat-header-cell *matHeaderCellDef>Message</mat-header-cell>
                         <mat-cell *matCellDef="let order">
-                            <p class="text-truncate font-weight-600">{{ order.ExecMessage }} for Amount ${{order.Amount}} and Quantity {{order.Quantity}}</p>
+                            <p class="text-truncate green-900-fg font-weight-600">{{ order.ExecMessage }}</p>
                         </mat-cell>
                     </ng-container>
 

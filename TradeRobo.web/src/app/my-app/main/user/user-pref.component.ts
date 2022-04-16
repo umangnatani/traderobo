@@ -24,8 +24,20 @@ export class UserPrefComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clearToken(){
-    this.apiService.RHLogOut();
+  refreshMA(){
+    this.Globals.IsBusy = true;
+      this.apiService.refreshMA().subscribe((data) => {
+        this.apiService.setMessage2(data);
+        this.Globals.IsBusy = false;
+    });
+  }
+
+  toggleProxy(){
+    this.Globals.IsBusy = true;
+      this.apiService.toggleProxy().subscribe((data) => {
+        this.apiService.setMessage2(data);
+        this.Globals.IsBusy = false;
+    });
   }
 
 }

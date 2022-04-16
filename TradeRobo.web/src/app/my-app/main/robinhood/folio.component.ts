@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService, NotificationService, BaseComponent, Globals } from 'app/my-app/_shared';
 
@@ -8,8 +8,9 @@ import { ApiService, NotificationService, BaseComponent, Globals } from 'app/my-
     styleUrls: ['./folio.component.scss']
 })
 export class FolioComponent extends BaseComponent implements OnInit {
+    @Input() broker;
 
-    pieValue = '';
+    pieId = 2;
     folioForm: FormGroup;
 
     dataSource;
@@ -44,11 +45,19 @@ export class FolioComponent extends BaseComponent implements OnInit {
         {
             field: "GlobalQuote.lastPrice",
             headerName: "Last Price",
+            cellClassRules: {
+                "red-900-fg": "data.GlobalQuote.isRed",
+                "green-900-fg": "!data.GlobalQuote.isRed",
+              },
             cellStyle: {'font-weight': 'bold'},
         },
         {
-            field: "GlobalQuote.netPercentChangeInDouble",
+            field: "GlobalQuote.percentChange",
             headerName: "% Change",
+            cellClassRules: {
+                "red-bg": "data.GlobalQuote.isRed",
+                "green-bg": "!data.GlobalQuote.isRed",
+              },
             cellStyle: {'font-weight': 'bold'},
             valueFormatter: (params) => {
                 return params.value.toFixed(2) + '%';
@@ -78,10 +87,11 @@ export class FolioComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.folioForm = this._formBuilder.group({
-            PieId: [],
-            Amount: [100, Validators.required],
+            PieId: [this.pieId],
+            Amount: [500, Validators.required],
             Side: ['buy'],
-            PriceWeighted: [false]
+            PriceWeighted: [false],
+            Broker: [this.broker]
         });
 
 
@@ -89,13 +99,24 @@ export class FolioComponent extends BaseComponent implements OnInit {
 
         this.apiService.getPies().subscribe((data) => {
             this.Pies = data;
+            this.loadPieSymbols();
         });
 
     }
 
+    get f() {
+        return this.folioForm.controls;
+    }
+
+
     selectOrderSide(val: string): void {
         this.folioForm.controls.Side.setValue(val);
         this.orderSide = val;
+    }
+
+    selectBroker(val: string): void {
+        //this.folioForm.controls.Side.setValue(val);
+        this.broker = val;
     }
 
 
@@ -122,12 +143,20 @@ export class FolioComponent extends BaseComponent implements OnInit {
 
     selectFolio(pie): void {
         this.folioForm.controls.PieId.setValue(pie.Id);
-        this.pieValue = pie.Name;
+        this.pieId = pie.Id;
 
-        this.apiService.getPieDetail(pie.Id, 'q').subscribe((data) => {
+        this.loadPieSymbols();
+       
+    }
+
+    loadPieSymbols(){
+        if (this.pieId > 0){
+        this.apiService.getPieDetail(this.pieId, 'q').subscribe((data) => {
             this.PieDetails = data;
             this.Total = this.getTotal();
         });
+    }
+
     }
 
     // public calculateTotal() {
@@ -140,7 +169,8 @@ export class FolioComponent extends BaseComponent implements OnInit {
 
 
     placeFolioOrder(): void {
-        // console.log(this.folioForm.value);
+        this.folioForm.controls.Broker.setValue(this.broker);
+        console.log(this.folioForm.value);
         this.Globals.IsBusy = true;
         this.apiService.placeFolioOrder(this.folioForm.value).subscribe((data) => {
             this.apiService.setMessage2(data);

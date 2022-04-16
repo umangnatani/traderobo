@@ -18,6 +18,8 @@ namespace TradeRobo.Service
 
         private AllyClient allyClient;
 
+        private AlpacaClient alpacaClient;
+
         public User User { get; set; }
         public List<UserConfig> UserConfig { get; set; }
 
@@ -28,8 +30,9 @@ namespace TradeRobo.Service
             this.UserConfig = GetUserConfig(UserId);
             InitRH();
             InitTD();
+            InitAlpaca();
 
-            allyClient = new AllyClient();
+            //allyClient = new AllyClient();
         }
 
 
@@ -41,6 +44,15 @@ namespace TradeRobo.Service
             _rhToken.deviceToken = GetUserConfig(this.UserConfig, SettingsKey.RHDeviceToken);
 
             rhClient = new RHClient(_rhToken);
+        }
+
+        private void InitAlpaca()
+        {
+
+            Settings.AlpacaKey  = GetAppSetting(SettingsKey.AlpacaKey);
+            Settings.AlpacaSecret = GetAppSetting(SettingsKey.AlpacaSecret);
+         
+            alpacaClient = new AlpacaClient();
         }
 
 
@@ -69,7 +81,7 @@ namespace TradeRobo.Service
         {
             tdClient.Authenticate(Code);
             SaveUserConfig(UserConfig, new UserConfig { Key = SettingsKey.TDToken, Value = _tdToken.access_token, UserId = User.Id });
-            SaveUserConfig(UserConfig, new UserConfig { Key = SettingsKey.TDRefreshToken , Value = _tdToken.refresh_token , UserId = User.Id });
+            SaveUserConfig(UserConfig, new UserConfig { Key = SettingsKey.TDRefreshToken, Value = _tdToken.refresh_token, UserId = User.Id });
 
         }
 
@@ -84,26 +96,26 @@ namespace TradeRobo.Service
         }
 
 
-        public ReturnType PlaceMultiOrder(MultiOrder multiOrder, string broker = "RH", string TDAccountId = "")
+        public ReturnType PlaceMultiOrder(MultiOrder multiOrder, string TDAccountId = "")
         {
             var rt = new ReturnType();
 
-            var orderGroup = new OrderGroup { UserId = User.Id, Broker = broker, Side = multiOrder.Side, Strategy = Strategy.Multi, Type = "market" };
+            var orderGroup = new OrderGroup { UserId = User.Id, Broker = multiOrder.Broker, Side = multiOrder.Side, Strategy = Strategy.Multi, Type = "market" };
 
             foreach (var item in multiOrder.Symbols)
             {
                 Order order = new Order { Symbol = item.Symbol, OrderGroup = orderGroup };
 
-                if (broker == "RH")
+                if (multiOrder.Broker == "robinhood" || multiOrder.Broker == "alpaca")
                 {
                     order.Amount = multiOrder.Amount;
                 }
-                else if (broker == "TD")
+                else if (multiOrder.Broker == "td")
                 {
                     order.TDAccountId = TDAccountId;
                     order.Quantity = CalcQuantity(multiOrder.Amount, item.last_trade_price);
                 }
-                
+
 
                 orderGroup.Orders.Add(order);
 
@@ -124,7 +136,7 @@ namespace TradeRobo.Service
         {
             var qty = Amount / Price;
 
-            if (qty < 1 && qty >  Convert.ToDecimal(0.7))
+            if (qty < 1 && qty > Convert.ToDecimal(0.7))
                 return 1;
             else return Math.Round(qty);
         }
@@ -218,20 +230,29 @@ namespace TradeRobo.Service
 
         }
 
-        private void PlaceClientOrder(Order order)
+        public Account GetAccount()
         {
-            if (order.OrderGroup.Broker == "RH")
+            return alpacaClient.GetAccount();
+        }
+
+            private void PlaceClientOrder(Order order)
+        {
+            if (order.OrderGroup.Broker == "robinhood")
             {
                 rhClient.PlaceOrder(order);
             }
-            else if (order.OrderGroup.Broker == "TD")
+            else if (order.OrderGroup.Broker == "td")
             {
                 tdClient.PlaceOrder(order);
                 UpdateToken();
             }
-            else if (order.OrderGroup.Broker == "ALLY")
+            else if (order.OrderGroup.Broker == "ally")
             {
                 allyClient.PlaceOrder(order);
+            }
+            else if (order.OrderGroup.Broker == "alpaca")
+            {
+                alpacaClient.PlaceOrder(order);
             }
         }
 
@@ -239,13 +260,13 @@ namespace TradeRobo.Service
         {
             list.ForEach(x =>
             {
-                if (x.Quote.pct_change > 0 && side == "buy")
+                if (!x.GlobalQuote.isRed && side == "buy")
                     x.Weight = x.Weight / x.PriceWeight;
-                else if (x.Quote.pct_change > 0 && side == "sell")
+                else if (!x.GlobalQuote.isRed && side == "sell")
                     x.Weight = x.Weight * x.PriceWeight;
-                else if (x.Quote.pct_change < 0 && side == "buy")
+                else if (x.GlobalQuote.isRed && side == "buy")
                     x.Weight = x.Weight * x.PriceWeight;
-                else if (x.Quote.pct_change < 0 && side == "sell")
+                else if (x.GlobalQuote.isRed && side == "sell")
                     x.Weight = x.Weight / x.PriceWeight;
             });
 
@@ -287,7 +308,7 @@ namespace TradeRobo.Service
                         marketWeightRatio = Math.Abs(nasdaq.changesPercentage) + 1;
                 }
 
-                var pieOrder = new PieOrder { Amount = schedule.Amount* marketWeightRatio, PieId = schedule.PieId, Side = "buy" };
+                var pieOrder = new PieOrder { Amount = schedule.Amount * marketWeightRatio, PieId = schedule.PieId, Side = "buy" };
                 rt = PlaceOrder(pieOrder);
             }
 
@@ -305,14 +326,12 @@ namespace TradeRobo.Service
 
             var retValue = new List<Order>();
 
-            var AccountUrl = rhClient.GetAccountProfile();
-
             if (pieOrder.PriceWeighted)
                 CalcPriceWeight(StockList, pieOrder.Side);
 
             var TotalWeight = StockList.Sum(x => x.Weight);
 
-            var orderGroup = new OrderGroup { UserId = User.Id, Broker = "RH", Side = pieOrder.Side, Strategy = Strategy.Pie, PieId = pieOrder.PieId, Amount = pieOrder.Amount };
+            var orderGroup = new OrderGroup { UserId = User.Id, Broker = pieOrder.Broker, Side = pieOrder.Side, Strategy = Strategy.Pie, PieId = pieOrder.PieId, Amount = pieOrder.Amount };
 
 
             foreach (var stock in StockList)
@@ -322,7 +341,7 @@ namespace TradeRobo.Service
                 orderGroup.Orders.Add(order);
 
                 if (order.Amount > 0)
-                    rhClient.PlaceOrder(order, AccountUrl);
+                    PlaceClientOrder(order);
 
             }
 
@@ -367,11 +386,17 @@ namespace TradeRobo.Service
         {
             var symbols = string.Join(",", list.Select(x => x.Symbol).ToList());
 
-            var results = tdClient.GetQuote(symbols);
+            var results = tdClient.GetCMLQuote(symbols);
+
+            // var results = tdClient.GetQuote(symbols);
+
+            // var MAs = tdClient.GetMA(symbols);
+
             list.ForEach(x =>
             {
-                x.GlobalQuote = results[x.Symbol];
-                x.PriceWeight = CalcPriceWeight(x.GlobalQuote.netPercentChangeInDouble);
+                x.GlobalQuote = results.SingleOrDefault(m => m.symbol == x.Symbol);
+                // x.GlobalQuote.MA = MAs.SingleOrDefault(m => m.Ticker == x.Symbol);
+                x.PriceWeight = CalcPriceWeight(x.GlobalQuote.percentChange);
             });
 
             //var rhQuotes = rhClient.GetQuote(symbols);
@@ -396,6 +421,57 @@ namespace TradeRobo.Service
         }
 
 
+        public ReturnType RefreshMA()
+        {
+
+
+
+            var pieList = _context.Set<Pie>().Where(x => x.UserId == User.Id).ToList();
+
+
+            foreach (var pie in pieList)
+            {
+                var list = _context.Set<PieDetail>().Where(x => x.PieId == pie.Id).ToList();
+
+                // var list = _context.Set<PieDetail>().Where(x => x.PieId == 9).ToList();
+
+
+                var symbols = string.Join(",", list.Select(x => x.Symbol).ToList());
+
+
+                var MAs = tdClient.GetMA(symbols);
+
+                if (MAs.Count > 0)
+                {
+                    list.ForEach(x =>
+                {
+
+                    var MA = MAs.FirstOrDefault(m => m.Ticker == x.Symbol);
+                    if (MA != null)
+                    {
+                        x.ma5 = MA.ma5;
+                        x.ma8 = MA.ma8;
+                        x.ma10 = MA.ma10;
+                        x.ma13 = MA.ma13;
+                        x.ma21 = MA.ma21;
+                        x.ma50 = MA.ma50;
+                        x.ma200 = MA.ma200;
+                    }
+                });
+
+
+                    _context.SaveChanges();
+                }
+            }
+
+
+
+
+
+            return new ReturnType();
+        }
+
+
 
         public List<PieDetail> GetPieDetailsWithQuote(Int32 PieId, bool GetQuote)
         {
@@ -408,7 +484,7 @@ namespace TradeRobo.Service
             }
             else
             {
-                list = _context.Set<PieDetail>().AsNoTracking().Where(x => x.Pie.UserId  == User.Id).OrderBy(x => x.Symbol).ToList();
+                list = _context.Set<PieDetail>().AsNoTracking().Where(x => x.Pie.UserId == User.Id).OrderBy(x => x.Symbol).ToList();
             }
 
             if (GetQuote)
@@ -416,7 +492,7 @@ namespace TradeRobo.Service
                 try
                 {
                     FillPiesWithQuotes(list);
-                    list = list.AsEnumerable().OrderBy(x => x.GlobalQuote.netPercentChangeInDouble).ToList();
+                    list = list.AsEnumerable().OrderBy(x => x.GlobalQuote.percentChange).ToList();
                 }
                 catch
                 {

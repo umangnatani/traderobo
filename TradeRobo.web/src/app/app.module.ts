@@ -31,7 +31,7 @@ import { EnvConfigService } from './my-app/_shared';
 
 const appRoutes: Routes = [
     {
-        path        : 'trade',
+        path        : 'app',
         loadChildren: './my-app/my-app.module#MyAppModule'
     },
 
@@ -57,7 +57,7 @@ const appRoutes: Routes = [
     },
     {
         path      : '**',
-        redirectTo: 'trade/td/TD'
+        redirectTo: 'app/trade/alpaca'
     }
 ];
 

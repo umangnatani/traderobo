@@ -53,6 +53,23 @@ namespace TradeRobo.Service
         }
 
 
+        public ReturnType ToggleProxy()
+        {
+            var entity = _context.AppSettings.Where(x => x.Key == "UseProxy").ToList()[0];
+
+            if (entity.Value == "True")
+                entity.Value = "False";
+            else
+                entity.Value = "True";
+
+
+            _context.SaveChanges();
+
+            return new ReturnType();
+        }
+
+
+
 
 
 
@@ -70,7 +87,7 @@ namespace TradeRobo.Service
 
             // var tmp = _context.RoleMenu.Include(x=> x.Menu).Where(x => roleIds.Contains(x.RoleId));
 
-            return _context.Menu.Include(x=> x.Children).Where(x => x.Roles.Any(x=> x.Role.Users.Any(x=> x.UserId == UserId))).ToList();
+            return _context.Menu.Include(x=> x.Children).Where(x => x.Roles.Any(x=> x.Role.Users.Any(x=> x.UserId == UserId))).OrderBy(x=> x.SortOrder).ToList();
 
         }
 

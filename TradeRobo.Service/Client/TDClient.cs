@@ -13,6 +13,12 @@ using Newtonsoft.Json.Linq;
 
 namespace TradeRobo.Service
 {
+
+    public class CMLReturn
+    {
+        public List<GlobalQuote> results { get; set; }
+    }
+
     public class TDClient
     {
 
@@ -22,6 +28,24 @@ namespace TradeRobo.Service
         {
             client = new RestClient();
             _token = token;
+        }
+
+
+        public List<MovingAverage> GetMA(string symbol)
+        {
+            var json = client.Get(EndPoint.MAs + symbol);
+            var list = JsonConvert.DeserializeObject<List<MovingAverage>>(json);
+
+            return list;
+        }
+
+
+        public List<GlobalQuote> GetCMLQuote(string symbol)
+        {
+            var json = client.Get(EndPoint.CMLQuotes  + symbol);
+            var list = JsonConvert.DeserializeObject<CMLReturn>(json).results;
+
+            return list;
         }
 
 
@@ -50,7 +74,7 @@ namespace TradeRobo.Service
         }
 
 
-      
+
 
         public void GetAccount()
         {

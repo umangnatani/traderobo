@@ -1,3 +1,4 @@
+import { fuseAnimations } from './../../../../@fuse/animations/index';
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import {
     FormBuilder,
@@ -19,13 +20,13 @@ import {
     styleUrls: ["./multi-order.component.scss"],
 })
 export class MultiOrderComponent extends BaseComponent implements OnInit {
-    @Input() broker = "RH";
+    @Input() broker;
 
     Watchlists;
-    watchlistId = 0;
+    watchlistId = 2;
 
     TDAccounts;
-    TDAccountId = '';
+    TDAccountId = "";
 
     form: FormGroup;
     isEdit = false;
@@ -55,21 +56,81 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
         {
             field: "Symbol",
             cellStyle: { "font-weight": "bold", color: "blue" },
+            cellRenderer: function(params) {
+                return '<a href="https://www.cmlviz.com/stocks/' + params.value + '/pivot-points" target="_blank" rel="noopener">'+ params.value+'</a>'
+              }
+            
         },
 
         {
             field: "GlobalQuote.lastPrice",
             headerName: "Price",
             cellStyle: { "font-weight": "bold" },
+            cellClassRules: {
+                "red-900-fg": "data.GlobalQuote.isRed",
+                "green-900-fg": "!data.GlobalQuote.isRed",
+              },
+        //     cellRenderer: function(params) {
+        //         return '<span class="bg-pink-600 text-white rounded-full">50</span>'
+        //    }
         },
         {
-            field: "GlobalQuote.netPercentChangeInDouble",
+            field: "GlobalQuote.percentChange",
             headerName: "% Change",
             cellStyle: { "font-weight": "bold" },
+            cellClassRules: {
+                "red-900-fg": "data.GlobalQuote.isRed",
+                "green-900-fg": "!data.GlobalQuote.isRed",
+              },
             valueFormatter: (params) => {
                 return params.value.toFixed(2) + "%";
             },
         },
+        // {
+        //     field: "ma50",
+        //     headerName: "SMA 50",
+        //     cellClass: "text-bold",
+        //     cellClassRules: {
+        //         'red-bg': 'x >= data.GlobalQuote.lastPrice',
+        //         'green-bg': 'x <= data.GlobalQuote.lastPrice',
+        //       },
+        // },
+        // {
+        //     field: "ma200",
+        //     headerName: "SMA 200",
+        //     cellClass: "text-bold",
+        //     cellClassRules: {
+        //         'red-bg': 'x >= data.GlobalQuote.lastPrice',
+        //         'green-bg': 'x <= data.GlobalQuote.lastPrice',
+        //       },
+        // },
+        // {
+        //     field: "ma5",
+        //     headerName: "EMA 5",
+        //     cellClass: "text-bold",
+        //     cellClassRules: {
+        //         'red-bg': 'x >= data.GlobalQuote.lastPrice',
+        //         'green-bg': 'x <= data.GlobalQuote.lastPrice',
+        //       },
+        // },
+        // {
+        //     field: "ma10",
+        //     headerName: "EMA 10",
+        //     cellClass: "text-bold",
+        //     cellClassRules: {
+        //         'red-bg': 'x >= data.GlobalQuote.lastPrice',
+        //         'green-bg': 'x <= data.GlobalQuote.lastPrice',
+        //       },
+        // },
+        // {
+        //     field: "ma21",
+        //     headerName: "EMA 21",
+        //     cellClass: "text-bold",
+        //     cellClassRules: {
+        //         'red-bg': 'x >= data.GlobalQuote.lastPrice',
+        //         'green-bg': 'x <= data.GlobalQuote.lastPrice',
+        //       },
+        // },
     ];
 
     constructor(
@@ -84,16 +145,12 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
             sortable: true,
         };
 
-        this.rowClassRules = {
-            "red-900-fg": "data.GlobalQuote.netPercentChangeInDouble < 0",
-            "green-900-fg": "data.GlobalQuote.netPercentChangeInDouble > 0",
-        };
 
         this.rowSelection = "multiple";
     }
 
     ngOnInit(): void {
-        this.orderType = this.broker === "RH" ? "multi": "single";
+        this.orderType = this.broker === "TD" ? "single" : "multi";
 
         this.folioForm = this._formBuilder.group({
             Amount: [50],
@@ -103,15 +160,14 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
             Price: [null],
             Increment: [0.2],
             Total: [3],
+            Broker: [this.broker]
         });
 
         this.form = this._formBuilder.group({
             Symbols: [],
         });
 
-        
-            
-        this.loadTDAccounts();       
+        this.loadTDAccounts();
 
         this.loadWatchlist();
 
@@ -119,13 +175,12 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
     }
 
     loadTDAccounts() {
-        if(this.broker === "TD"){
+        if (this.broker === "td") {
             this.apiService.getTDAccounts().subscribe((data) => {
                 this.TDAccounts = data;
                 this.TDAccountId = this.TDAccounts[0].AccountId;
             });
-    }
-
+        }
     }
 
     selectAccount(obj): void {
@@ -136,16 +191,16 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
         this.apiService.getPies().subscribe((data) => {
             this.Watchlists = data;
         });
-
     }
 
     loadWatchlistSymbols() {
-        this.apiService
-            .getPieDetail(this.watchlistId, "q")
-            .subscribe((data) => {
-                this.dataSource = data;
-            });
-
+        if (this.watchlistId > 0) {
+            this.apiService
+                .getPieDetail(this.watchlistId, "q")
+                .subscribe((data) => {
+                    this.dataSource = data;
+                });
+        }
     }
 
     get f() {
@@ -153,11 +208,20 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
     }
 
     onRowSelected(event) {
-        
         this.CurSymbol = event.node.data.Symbol;
         this.f.Symbol.setValue(this.CurSymbol);
-        this.f.Price.setValue((Math.round(event.node.data.GlobalQuote.lastPrice*100)/100).toFixed(2));
-        this.f.Increment.setValue((Math.round(event.node.data.GlobalQuote.lastPrice*.007*100)/100).toFixed(2));
+        this.f.Price.setValue(
+            (
+                Math.round(event.node.data.GlobalQuote.lastPrice * 100) / 100
+            ).toFixed(2)
+        );
+        this.f.Increment.setValue(
+            (
+                Math.round(
+                    event.node.data.GlobalQuote.lastPrice * 0.007 * 100
+                ) / 100
+            ).toFixed(2)
+        );
         this.showTrade = true;
     }
 
@@ -174,6 +238,7 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
     }
 
     selectWatchlist(watchlist): void {
+        //console.log(watchlist.Id);
         this.watchlistId = watchlist.Id;
         this.isEdit = true;
 
@@ -193,9 +258,8 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
     }
 
     selectBroker(val: string): void {
-        //this.folioForm.controls.Side.setValue(val);
         this.broker = val;
-        this.loadTDAccounts();       
+        this.loadTDAccounts();
     }
 
     placeOrder(): void {
@@ -205,6 +269,8 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
             this.f.Total.setValue(1);
         }
 
+        this.f.Broker.setValue(this.broker);
+
         let data = this.folioForm.value;
 
         data.Symbols = payload;
@@ -213,7 +279,12 @@ export class MultiOrderComponent extends BaseComponent implements OnInit {
 
         this.Globals.IsBusy = true;
         this.apiService
-            .placeComplexOrder(data, this.orderType, this.broker, this.TDAccountId)
+            .placeComplexOrder(
+                data,
+                this.orderType,
+                this.broker,
+                this.TDAccountId
+            )
             .subscribe((response) => {
                 this.apiService.setMessage2(response);
                 //this.dataSource = data.Object.Orders;

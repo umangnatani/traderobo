@@ -23,7 +23,7 @@ export class AuthenticateComponent extends BaseComponent implements OnInit {
 
     constructor(
         private _formBuilder: FormBuilder,
-        protected apiService: ApiService,
+        public apiService: ApiService,
         private route: ActivatedRoute,
         private router: Router
     ) {
@@ -41,6 +41,8 @@ export class AuthenticateComponent extends BaseComponent implements OnInit {
     clearToken(){
         this.apiService.RHLogOut();
       }
+
+    
 
     login(): void {
         //console.log(this.loginForm.value);

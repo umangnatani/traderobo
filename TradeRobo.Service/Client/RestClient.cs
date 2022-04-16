@@ -35,14 +35,21 @@ namespace TradeRobo.Service
                     Proxy = proxy,
                 };
 
-
+                httpClientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
                 _client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
             }
             else
 
                 _client = new HttpClient();
+
+            
         }
 
+
+        public void SetHeaders(string key, string value)
+        {
+            _client.DefaultRequestHeaders.Add(key, value);
+        }
 
         public void SetHeaders(string token)
         {

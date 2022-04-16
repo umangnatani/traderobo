@@ -1,5 +1,5 @@
 <div fxLayout="column" fxFlex="1 0 auto">
-    <app-header [Title]="'User Settings'" ></app-header>
+    <app-header [Title]="'Keep a clean house'" ></app-header>
 
     <div class="p-16" fxLayout="column" fxLayoutGap="16px">
 
@@ -11,9 +11,15 @@
 
 
 
-                    <div fxFlex="30">
-                        <button class="warn mat-raised-button" type="submit" (click)="clearToken()">
-                            Clear Robinhood Authentication
+                    <div class="mt-20">
+                        <button class="primary mat-raised-button" type="submit" (click)="refreshMA()" [disabled]="Globals.IsBusy">
+                            Refresh Moving Averages
+                        </button>
+                    </div>
+                
+                    <div class="mt-40">
+                        <button class="warn mat-raised-button" type="submit" (click)="toggleProxy()"  [disabled]="Globals.IsBusy">
+                            Toggle Proxy
                         </button>
                     </div>
 

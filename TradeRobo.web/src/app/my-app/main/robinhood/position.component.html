@@ -2,11 +2,17 @@
     <app-header></app-header>
 
     <div class="content p-24" fxLayout="column" fxLayoutGap="16px">
-        <div>
+        <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="space-between end">
             <button class="warn mat-raised-button" mat-raised-button="" (click)="placeOrder()">
-                <span class="mat-button-wrapper"> Sell Selected</span>
+                <span class="mat-button-wrapper"> Let go</span>
             </button>
+            <div>
+                <span class="text-bold">Portfolio:</span><span class="blue-fg text-bold mr-16"> {{portfolio_value | currency}} </span> 
+                <span class="text-bold">Buying Power:</span><span class="green-fg text-bold mr-16"> {{buying_power | currency}} </span> 
+                <span class="text-bold">Cash:</span><span class="red-fg text-bold"> {{cash | currency}} </span>
+            </div>
         </div>
+      
 
         <ag-grid-angular style="width: auto; height: 800px;" class="ag-theme-alpine" [rowData]="dataSource"
             [columnDefs]="columnDefs" [rowClassRules]="rowClassRules" [defaultColDef]="defaultColDef"

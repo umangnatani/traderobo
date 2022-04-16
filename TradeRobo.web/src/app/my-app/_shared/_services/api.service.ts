@@ -57,26 +57,39 @@ export class ApiService extends BaseService {
     }
 
     public placeOrder(data, broker: string, accountId:string): Observable<ApiModel.ReturnType> {
-        if (broker === 'RH') {
-            return this.placeRHOrder(data);
+        if (broker === 'td') {
+            return this.placeTDOrder(data, accountId);
+           
         }
         else {
-            return this.placeTDOrder(data, accountId);
+            return this.placeCommonOrder(data);
         }
     }
 
     public placeBulkOrder(data, broker: string, accountId: string): Observable<ApiModel.ReturnType> {
-        if (broker === 'RH') {
-            return this.placeBulkRHOrder(data);
+        if (broker === 'td') {
+            return this.placeBulkTDOrder(data, accountId);
+            
         }
         else {
-            return this.placeBulkTDOrder(data, accountId);
+            return this.placeBulkCommonOrder(data);
         }
     }
 
-
     public getPositions() {
         return this.httpClient.get(this.getUrl('/RH/position'));
+    }
+
+    public getTradingAccount() {
+        return this.httpClient.get(this.getUrl('/trade/account'));
+    }
+
+    public refreshMA(): Observable<ApiModel.ReturnType> {
+        return this.httpClient.get<ApiModel.ReturnType>(this.getUrl('/pie/refresh'));
+    }
+
+    public toggleProxy(): Observable<ApiModel.ReturnType> {
+        return this.httpClient.get<ApiModel.ReturnType>(this.getUrl('/pie/toggle'));
     }
 
     public getWatchlistSymbols(watchlistId) {
@@ -91,8 +104,8 @@ export class ApiService extends BaseService {
         return this.httpClient.post(this.getUrl('/RH/buyback'), data);
     }
 
-    public placeBulkRHOrder(data): Observable<ApiModel.ReturnType> {
-        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/RH/order/multi'), data);
+    public placeBulkCommonOrder(data): Observable<ApiModel.ReturnType> {
+        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/trade/order/multi'), data);
     }
 
     public placeBulkTDOrder(data, accountId): Observable<ApiModel.ReturnType> {
@@ -104,8 +117,8 @@ export class ApiService extends BaseService {
         return this.httpClient.get<FuseNavigation[]>(this.getUrl('/user/menu'));
     }
 
-    public placeRHOrder(data): Observable<ApiModel.ReturnType> {
-        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/RH/order'), data);
+    public placeCommonOrder(data): Observable<ApiModel.ReturnType> {
+        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/trade/order'), data);
     }
 
     public placeTDOrder(data, accountId: string): Observable<ApiModel.ReturnType> {
@@ -113,7 +126,7 @@ export class ApiService extends BaseService {
     }
 
     public placeFolioOrder(data): Observable<ApiModel.ReturnType> {
-        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/RH/order/pie'), data);
+        return this.httpClient.post<ApiModel.ReturnType>(this.getUrl('/trade/order/pie'), data);
     }
 
     public login(data): Observable<ApiModel.RHAuthResponse> {

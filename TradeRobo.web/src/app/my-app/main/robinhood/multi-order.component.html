@@ -1,5 +1,5 @@
 <div id="forms" class="page-layout simple fullwidth" fxLayout="column">
-    <app-header [Title]="'Multi Ticker'"></app-header>
+    <app-header [Title]="'Multi Ticker Order'"></app-header>
 
     <!-- CONTENT -->
     <div ngClass="content p-24" ngClass.xs="content p-4">
@@ -24,9 +24,9 @@
 
                         <div fxLayout="row" fxLayoutGap="8px">
                             <mat-card [ngClass]="orderSide == 'buy'? 'green-800': 'folio'" class="mb-24" fxFlex
-                                (click)="selectOrderSide('buy')">Want</mat-card>
+                                (click)="selectOrderSide('buy')">BTO</mat-card>
                             <mat-card [ngClass]="orderSide == 'sell'? 'pink': 'folio'" class="mb-24" fxFlex
-                                (click)="selectOrderSide('sell')">Don't want</mat-card>
+                                (click)="selectOrderSide('sell')">STC</mat-card>
                         </div>
 
                         <div fxLayout="row" fxLayoutGap="8px">
@@ -37,15 +37,16 @@
                         </div>
 
                         <div fxLayout="row" fxLayoutGap="8px">
-                            <mat-card [ngClass]="broker == 'RH'? 'green-500': 'folio'" class="mb-24" fxFlex
-                                (click)="selectBroker('RH')">Hood</mat-card>
-                            <mat-card [ngClass]="broker == 'TD'? 'blue-500': 'folio'" class="mb-24" fxFlex
-                                (click)="selectBroker('TD')">TD</mat-card>
-                            <!-- <mat-card [ngClass]="broker == 'ALLY'? 'blue-500': 'folio'" class="mb-24" fxFlex
-                                (click)="selectBroker('ALLY')">Ally</mat-card> -->
+                            <mat-card [ngClass]="broker == 'robinhood'? 'green-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('robinhood')">Hood</mat-card>
+                                <mat-card [ngClass]="broker == 'alpaca'? 'blue-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('alpaca')">Alpaca</mat-card>
+                            <mat-card [ngClass]="broker == 'td'? 'blue-500': 'folio'" class="mb-24" fxFlex
+                                (click)="selectBroker('td')">TD</mat-card>
+                            
                         </div>
 
-                        <div fxLayout="row" fxLayoutGap="8px">
+                        <div fxLayout="row" fxLayoutGap="8px" *ngIf="broker == 'td'">
                             <ng-container *ngFor="let TDAccount of TDAccounts">
                                 <mat-card [ngClass]="TDAccount.AccountId == TDAccountId ? 'purple-900': 'fuse-white-500'" 
                                     (click)="selectAccount(TDAccount)">
@@ -116,7 +117,7 @@
 
             </div>
 
-            <div fxFlex=60 fxFlex.xs=100>
+            <div fxFlex=50 fxFlex.xs=100>
             <ag-grid-angular style="height: 750px;" class="ag-theme-alpine" [rowData]="dataSource"
                 [columnDefs]="columnDefs" [rowClassRules]="rowClassRules" [defaultColDef]="defaultColDef"
                 [rowSelection]="rowSelection" [rowMultiSelectWithClick]="true" (gridReady)="onGridReady($event)"

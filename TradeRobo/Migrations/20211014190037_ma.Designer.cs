@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TradeRobo.Service;
 
 namespace TradeRobo.Migrations
 {
     [DbContext(typeof(MyDatabaseContext))]
-    partial class MyDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211014190037_ma")]
+    partial class ma
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +53,6 @@ namespace TradeRobo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -194,28 +193,28 @@ namespace TradeRobo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma10")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma13")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma200")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma21")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma5")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma50")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("ma8")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("Id");
 

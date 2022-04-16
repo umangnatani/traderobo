@@ -74,7 +74,8 @@ export class LoginComponent implements OnInit {
     authenticate(): void {
         this.service.authenticate(this.loginForm.value).subscribe((data) => {
             if (data){
-                this.router.navigate([this.returnUrl]);
+                //this.router.navigate([this.returnUrl]);
+                this.router.navigate(['/']);
             }
             else{
                 this.isValid = false;

@@ -99,6 +99,28 @@ namespace TradeRobo.Controllers
             return _service.GetPieDetails(PieId);
         }
 
+
+
+        [HttpGet]
+        [Route("refresh")]
+        public ReturnType RefreshMA()
+        {
+            var UserId = GetUserId();
+
+            var tradeService = new TradeService(_context, UserId);
+
+            return tradeService.RefreshMA();
+        }
+
+
+        [HttpGet]
+        [Route("toggle")]
+        public ReturnType ToggleProxy ()
+        {
+            return _service.ToggleProxy();
+        }
+
+
         [HttpGet]
         [Route("detail/{PieId}/{flag}")]
         public List<PieDetail> GetPieDetails(Int32 PieId, string flag)
